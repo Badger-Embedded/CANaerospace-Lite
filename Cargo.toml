@@ -1,8 +1,14 @@
 [package]
 name = "CANaerospace-Lite"
-version = "0.1.0"
+description = "A lite version of CAN Aerospace Implementation according to 'Interface specification for airborne CAN applications V 1.7'"
+keywords = ["canbus", "aerospace", "embedded"]
+categories = ["embedded", "network-programming"]
+version = "0.0.1"
 edition = "2018"
-
+homepage = "https://github.com/Badger-Embedded/CANaerospace-Lite"
+license = "LGPL-3.0-only"
+repository = "https://github.com/Badger-Embedded/CANaerospace-Lite"
+readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
