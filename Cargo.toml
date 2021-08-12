@@ -1,5 +1,5 @@
 [package]
-name = "CANaerospace-Lite"
+name = "CANaerospace_lite"
 description = "A lite version of CAN Aerospace Implementation according to 'Interface specification for airborne CAN applications V 1.7'"
 keywords = ["canbus", "aerospace", "embedded"]
 categories = ["embedded", "network-programming"]
