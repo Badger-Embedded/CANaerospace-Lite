@@ -1,7 +1,5 @@
-use std::{any::Any, os::linux::raw};
-
 use bxcan::Data;
-use can_aerospace_lite::{CANAerospaceCallbackHandler, CANAerospaceLite, driver::CANAerospaceDriver, message::{CANAerospaceFrame, RawMessage}, types::{DataType, MessageCode, MessageType, ServiceCodeType}};
+use can_aerospace_lite::{message::{CANAerospaceFrame, RawMessage}, types::{MessageType}};
 
 fn main() {
     let data: [u8; 7] = [1,2,3,4,5,6,7];
