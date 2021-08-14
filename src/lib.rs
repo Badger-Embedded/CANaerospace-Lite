@@ -1,8 +1,7 @@
 #![no_std]
 
 use driver::CANAerospaceDriver;
-use message::{CANAerospaceFrame};
-use types::{DataType, MessageCode, MessageType, ServiceCodeType};
+use types::{DataType, MessageCode, MessageType, ServiceCode};
 
 pub mod types;
 pub mod message;
@@ -15,7 +14,7 @@ pub trait CANAerospaceCallbackHandler {
     /// CANAerospace Service Request Handler
     /// If returns message then it will be automatically sent as response
     /// If it returns (x, None) then there will be no response for the message. (x stands for Any)
-    fn handle_service_request(&self, message_type: &MessageType, service_code: &ServiceCodeType, msg_code: &MessageCode, data: &DataType) 
+    fn handle_service_request(&self, message_type: &MessageType, service_code: &ServiceCode, message_code: &MessageCode, data: &DataType) 
                     -> (Option<MessageCode>, Option<DataType>);
     fn handle_emergency_event(&self, message_type: &MessageType);
 }
@@ -87,7 +86,7 @@ impl<D, H> CANAerospaceLite<D, H> where
 
                     let (code, data) = self.callback_handler.handle_service_request(
                         &frame.message_type,
-                        &ServiceCodeType::IDS,
+                        &frame.message.service_code,
                         &frame.message.message_code,
                         &DataType::from(&frame.message)
                     );

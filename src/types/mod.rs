@@ -2,11 +2,26 @@ use crate::message::RawMessage;
 
 
 pub type MessageCode = u8;
-
+pub type ServiceCode = u8;
 
 #[derive(Clone, Debug)]
-pub enum ServiceCodeType {
-    IDS = 0
+pub enum ServiceCodeEnum {
+    IDS = 0x0,
+    NSS = 0x1,
+    DDS = 0x2,
+    DUS = 0x3,
+    SCS = 0x4,
+    TIS = 0x5,
+    FPS = 0x6,
+    STS = 0x7,
+    FSS = 0x8,
+    TCS = 0x9,
+    BSS = 0xA,
+    NIS = 0xB,
+    MIS = 0xC,
+    MCS = 0xD,
+    CSS = 0xE,
+    DSS = 0xF
 }
 
 
