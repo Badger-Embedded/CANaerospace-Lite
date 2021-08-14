@@ -6,21 +6,37 @@ pub type ServiceCode = u8;
 
 #[derive(Clone, Debug)]
 pub enum ServiceCodeEnum {
+    /// Identification Service
     IDS = 0x0,
+    /// Node Synchronisation Service
     NSS = 0x1,
+    /// Data Download Service
     DDS = 0x2,
+    /// Data Upload Service
     DUS = 0x3,
+    /// Simultation Control Service
     SCS = 0x4,
+    /// Transmission Interval Service
     TIS = 0x5,
+    /// FLASH Programming Service
     FPS = 0x6,
+    /// State Transmission Service
     STS = 0x7,
+    /// Filter Setting Service
     FSS = 0x8,
+    /// Test Control Service
     TCS = 0x9,
+    /// CAN Baudrate Setting Service 
     BSS = 0xA,
+    /// NodeId Setting Service
     NIS = 0xB,
+    /// Module Information Service
     MIS = 0xC,
+    /// Module Configuration Service
     MCS = 0xD,
+    /// CAN ID Setting Service
     CSS = 0xE,
+    /// CAN ID Distribution Setting Service
     DSS = 0xF
 }
 
@@ -31,22 +47,22 @@ pub enum MessageType {
     /// Emergency Event Data \[0,127\]
     /// Transmitted asynchronously whenever a situation requiring immediate action occurs.
     EED(u16),
-    /// High Priority Node Service Data [128,199]
+    /// High Priority Node Service Data \[128,199\]
     /// Transmitted asynchronously or cyclic with defined transmission intervals for operational commands (36 channels)
     NSH(u16),
-    /// High Priority User-Defined Data [200,299]
+    /// High Priority User-Defined Data \[200,299\]
     /// Message/data format and transmission intervals entirely user-defined
     UDH(u16),
-    /// Normal Operation Data [300,1799]
+    /// Normal Operation Data \[300,1799\]
     /// Transmitted asynchronously or cyclic with defined transmission intervals for operational and status data.
     NOD(u16),
-    /// Low Priority User-Defined Data [1800,1899]
+    /// Low Priority User-Defined Data \[1800,1899\]
     /// Message/data format and transmission intervals entirely user-defined
     UDL(u16),
-    /// Debug Service Data [1900,1999]
+    /// Debug Service Data \[1900,1999\]
     /// Transmitted asynchronously or cyclic for debug communication & software download actions.
     DSD(u16),
-    /// Low Priority Node Service Data [2000,2031]
+    /// Low Priority Node Service Data \[2000,2031\]
     /// Transmitted asynchronously or cyclic for test & maintenance actions (16 channels).
     NSL(u16),
     INVALID
