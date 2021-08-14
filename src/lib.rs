@@ -1,6 +1,7 @@
 #![no_std]
 
 use driver::CANAerospaceDriver;
+use message::CANAerospaceFrame;
 use types::{DataType, MessageCode, MessageType, ServiceCode};
 
 pub mod types;
@@ -11,11 +12,14 @@ pub mod bxcan;
 
 
 pub trait CANAerospaceCallbackHandler {
+
     /// CANAerospace Service Request Handler
     /// If returns message then it will be automatically sent as response
     /// If it returns (x, None) then there will be no response for the message. (x stands for Any)
     fn handle_service_request(&self, message_type: &MessageType, service_code: &ServiceCode, message_code: &MessageCode, data: &DataType) 
                     -> (Option<MessageCode>, Option<DataType>);
+    
+    /// CANAerospace Emergency Event Data Handler
     fn handle_emergency_event(&self, message_type: &MessageType);
 }
 
@@ -74,6 +78,10 @@ impl<D, H> CANAerospaceLite<D, H> where
 
     pub fn send_debug_message(&self, msg_type: MessageType, data: DataType) {
         todo!("Not implemented yet!");
+    }
+
+    pub fn receive(&mut self) -> Option<CANAerospaceFrame> {
+        self.driver.recv_frame()
     }
 
     pub fn notify_receive_event(&mut self) {
