@@ -9,29 +9,30 @@ pub enum ServiceCodeType {
 
 
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum MessageType {
-    //// Emergency Event Data [0,127]
-    //// Transmitted asynchronously whenever a situation requiring immediate action occurs.
+    /// Emergency Event Data [0,127]
+    /// Transmitted asynchronously whenever a situation requiring immediate action occurs.
     EED(u16),
-    //// High Priority Node Service Data [128,199]
-    //// Transmitted asynchronously or cyclic with defined transmission intervals for operational commands (36 channels)
+    /// High Priority Node Service Data [128,199]
+    /// Transmitted asynchronously or cyclic with defined transmission intervals for operational commands (36 channels)
     NSH(u16),
-    //// High Priority User-Defined Data [200,299]
-    //// Message/data format and transmission intervals entirely user-defined
+    /// High Priority User-Defined Data [200,299]
+    /// Message/data format and transmission intervals entirely user-defined
     UDH(u16),
-    //// Normal Operation Data [300,1799]
-    //// Transmitted asynchronously or cyclic with defined transmission intervals for operational and status data.
+    /// Normal Operation Data [300,1799]
+    /// Transmitted asynchronously or cyclic with defined transmission intervals for operational and status data.
     NOD(u16),
-    //// Low Priority User-Defined Data [1800,1899]
-    //// Message/data format and transmission intervals entirely user-defined
+    /// Low Priority User-Defined Data [1800,1899]
+    /// Message/data format and transmission intervals entirely user-defined
     UDL(u16),
-    //// Debug Service Data [1900,1999]
-    //// Transmitted asynchronously or cyclic for debug communication & software download actions.
+    /// Debug Service Data [1900,1999]
+    /// Transmitted asynchronously or cyclic for debug communication & software download actions.
     DSD(u16),
-    //// Low Priority Node Service Data [2000,2031]
-    //// Transmitted asynchronously or cyclic for test & maintenance actions (16 channels).
-    NSL(u16)
+    /// Low Priority Node Service Data [2000,2031]
+    /// Transmitted asynchronously or cyclic for test & maintenance actions (16 channels).
+    NSL(u16),
+    INVALID
 }
 
 impl MessageType {
@@ -78,8 +79,24 @@ impl MessageType {
                     panic!("CANaerospace: Invalid Message ID({}) for NSL Message.", id);
                 }
                 id
-            }
+            },
+            MessageType::INVALID => u16::MAX,
         }        
+    }
+}
+
+impl From<u16> for MessageType {
+    fn from(raw_id: u16) -> Self {
+        match raw_id {
+            0..=127     => MessageType::EED(raw_id),
+            128..=199   => MessageType::NSH(raw_id),
+            200..=299   => MessageType::UDH(raw_id),
+            300..=1799  => MessageType::NOD(raw_id),
+            1800..=1899 => MessageType::UDL(raw_id),
+            1900..=1999 => MessageType::DSD(raw_id),
+            2000..=2031 => MessageType::NSL(raw_id),
+            _ => MessageType::INVALID
+        }
     }
 }
 
