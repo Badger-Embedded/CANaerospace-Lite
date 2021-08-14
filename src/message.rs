@@ -1,9 +1,9 @@
-use crate::types::MessageType;
+use crate::types::{DataType, MessageCode, MessageType, ServiceCodeType};
 
 
 #[derive(Clone, Debug)]
 pub struct CANAerospaceFrame {
-    pub frame_type: MessageType,
+    pub message_type: MessageType,
     pub message: RawMessage
 }
 

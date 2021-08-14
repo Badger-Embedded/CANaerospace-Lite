@@ -12,23 +12,23 @@ impl From<Frame> for CANAerospaceFrame {
             Some(data) => RawMessage::new(data).unwrap(),
             None => RawMessage::empty(),
         };
-        let frame_type = MessageType::from(raw_id as u16);
+        let message_type = MessageType::from(raw_id as u16);
         Self {
-            frame_type,
+            message_type,
             message
         }
     }
 }
 
-impl From<CANAerospaceFrame> for Frame {
-    fn from(canas_frame: CANAerospaceFrame) -> Self {
-        let id = StandardId::new(canas_frame.frame_type.id()).unwrap_or(StandardId::MAX);
-        Frame::new_data(id, Data::from(canas_frame.message))
+impl From<&CANAerospaceFrame> for Frame {
+    fn from(canas_frame: &CANAerospaceFrame) -> Self {
+        let id = StandardId::new(canas_frame.message_type.id()).unwrap_or(StandardId::MAX);
+        Frame::new_data(id, Data::from(&canas_frame.message))
     }
 }
 
-impl From<RawMessage> for Data {
-    fn from(message: RawMessage) -> Self {
+impl From<&RawMessage> for Data {
+    fn from(message: &RawMessage) -> Self {
         // TODO: Special treatment can be done in future to reduce data size for some message types
         let mut bytes = [0u8; 8];
         bytes[0] = message.node_id;

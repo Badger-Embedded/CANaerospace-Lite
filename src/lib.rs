@@ -1,6 +1,7 @@
 #![no_std]
 
 use driver::CANAerospaceDriver;
+use message::{CANAerospaceFrame};
 use types::{DataType, MessageCode, MessageType, ServiceCodeType};
 
 pub mod types;
@@ -9,12 +10,14 @@ pub mod driver;
 // #[cfg(feature = "stm32f1xx")]
 pub mod bxcan;
 
-const CAN_AEROSPACE_MESSAGE_HEADER_LEN: u8 = 4;
-
 
 pub trait CANAerospaceCallbackHandler {
-    fn handle_service_request<D: CANAerospaceDriver, H: CANAerospaceCallbackHandler>(&self, canas_lite: CANAerospaceLite<D, H>, 
-                    message_type: MessageType, service_code: ServiceCodeType, msg_code: MessageCode, data: DataType);
+    /// CANAerospace Service Request Handler
+    /// If returns message then it will be automatically sent as response
+    /// If it returns (x, None) then there will be no response for the message. (x stands for Any)
+    fn handle_service_request(&self, message_type: &MessageType, service_code: &ServiceCodeType, msg_code: &MessageCode, data: &DataType) 
+                    -> (Option<MessageCode>, Option<DataType>);
+    fn handle_emergency_event(&self, message_type: &MessageType);
 }
 
 #[derive(Debug)]
@@ -57,7 +60,7 @@ impl<D, H> CANAerospaceLite<D, H> where
 
     }
 
-    pub fn send_service_response(&self, target_id: u8, msg_type: MessageType, data: DataType) {
+    pub fn send_service_response(&self, target_id: u8, msg_type: &MessageType, msg_code: &MessageCode, data: &DataType) {
 
     }
 
@@ -74,8 +77,36 @@ impl<D, H> CANAerospaceLite<D, H> where
         todo!("Not implemented yet!");
     }
 
-    pub fn notify_receive_event(&self) {
+    pub fn notify_receive_event(&mut self) {
         // call driver to receive the frame
+        if let Some(frame) = self.driver.recv_frame() {
+            match frame.message_type {
+                MessageType::EED(_) => todo!(),
+                
+                MessageType::NSH(message_type) => {
+
+                    let (code, data) = self.callback_handler.handle_service_request(
+                        &frame.message_type,
+                        &ServiceCodeType::IDS,
+                        &frame.message.message_code,
+                        &DataType::from(&frame.message)
+                    );
+
+                    if !data.is_none() {
+                        let msg_code = code.unwrap_or(frame.message.message_code);
+                        self.send_service_response(self.node_id, &MessageType::from(message_type + 1), &msg_code, &data.unwrap());
+                    }
+
+                },
+
+                MessageType::UDH(_) => todo!(),
+                MessageType::NOD(_) => todo!(),
+                MessageType::UDL(_) => todo!(),
+                MessageType::DSD(_) => todo!(),
+                MessageType::NSL(_) => todo!(),
+                MessageType::INVALID => todo!(),
+            }
+        }
         todo!("Not implemented yet!");
     }
 
