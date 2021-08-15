@@ -1,3 +1,5 @@
+use core::cmp::Ordering;
+
 use crate::types::{DataType, MessageCode, MessageType, NodeId, ServiceCode};
 
 #[derive(Clone, Debug)]
@@ -38,6 +40,26 @@ pub struct CANAerospaceFrame {
     pub message_type: MessageType,
     pub message: RawMessage
 }
+
+impl Ord for CANAerospaceFrame {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+        self.message_type.id().cmp(&other.message_type.id())
+    }
+}
+
+impl PartialOrd for CANAerospaceFrame {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+        Some(self.message_type.id().cmp(&other.message_type.id()))
+    }
+}
+
+impl PartialEq for CANAerospaceFrame {
+    fn eq(&self, other: &Self) -> bool {
+        self.message_type.id().cmp(&other.message_type.id()) == Ordering::Equal
+    }
+}
+
+impl Eq for CANAerospaceFrame{}
 
 impl From<CANAerospaceMessage> for CANAerospaceFrame {
     fn from(message: CANAerospaceMessage) -> Self {

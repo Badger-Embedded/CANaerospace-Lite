@@ -1,5 +1,4 @@
-use bxcan::Data;
-use can_aerospace_lite::{CANAerospaceLite, driver::CANAerospaceDriver, handler::CANAerospaceHandler, message::{CANAerospaceFrame, CANAerospaceMessage, RawMessage}, types::{DataType, MessageType, ServiceCodeEnum}};
+use can_aerospace_lite::{CANAerospaceLite, driver::CANAerospaceDriver, message::{CANAerospaceFrame, RawMessage}, types::{DataType, MessageType}};
 
 static mut COUNT: u32 = 0;
 
@@ -13,11 +12,11 @@ impl CANAerospaceDriver for CANDriver {
     fn recv_frame(&mut self) -> Option<CANAerospaceFrame> {
         unsafe {
             return match COUNT {
-                0 => Some(CANAerospaceFrame {
+                1 => Some(CANAerospaceFrame {
                     message_type: MessageType::NSH(128),
                     message: RawMessage::from([0, DataType::ULONG(0).type_id(), 2, 3, 0xBA, 0xBA, 0xDE, 0xDE]),
                 }),
-                1 => Some(CANAerospaceFrame {
+                0 => Some(CANAerospaceFrame {
                     message_type: MessageType::NOD(300),
                     message: RawMessage::from([0, DataType::BSHORT2(0,0).type_id(), 2, 3, 0xDE, 0xDE, 0xDE, 0xDE]),
                 }),
@@ -31,30 +30,24 @@ impl CANAerospaceDriver for CANDriver {
     }
 }
 
-struct CANHandler;
-
-impl CANAerospaceHandler for CANHandler {
-    fn handle_service_request(&mut self, message: CANAerospaceMessage) -> (Option<can_aerospace_lite::types::MessageCode>, Option<DataType>) {
-        println!("handle_service_request: Type: {:#X?}", message);
-
-        if let MessageType::NSH(_) = message.message_type {
-            return (Some(0xF), Some(DataType::ULONG(0xDEAD_BEEF)));
-        }
-
-        (None, None)
-    }
-
-    fn handle_messages(&mut self, message: CANAerospaceMessage) {
-        println!("handle_messages: Type: {:#X?}", message);
-    }
-}
-
 fn main() {
-    let mut can_aerospace: CANAerospaceLite<CANDriver, CANHandler> = CANAerospaceLite::new(10, CANDriver{});
-    can_aerospace.set_handler(CANHandler{});
+    let mut can_aerospace: CANAerospaceLite<CANDriver> = CANAerospaceLite::new(10, CANDriver{});
     can_aerospace.notify_receive_event();
+    // let msg = can_aerospace.receive().unwrap();
     unsafe { COUNT += 1; }
     can_aerospace.notify_receive_event();
     unsafe { COUNT += 1; }
     can_aerospace.notify_receive_event();
+
+    let mut message = can_aerospace.read_message().unwrap();
+    println!("Message {:#X?}", message);
+    message.message_type = MessageType::NSH(message.message_type.id() + 1);
+    message.data = DataType::ULONG(0xDEAD_BEEF);
+    can_aerospace.send_message(message);
+
+    message = can_aerospace.read_message().unwrap();
+    println!("Message {:#X?}", message);
+    message = can_aerospace.read_message().unwrap();
+    println!("Message {:#X?}", message);
+
 }
