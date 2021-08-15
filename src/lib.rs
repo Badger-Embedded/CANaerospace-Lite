@@ -1,45 +1,46 @@
 #![no_std]
 
 use driver::CANAerospaceDriver;
-use message::CANAerospaceFrame;
+use handler::CANAerospaceHandler;
+use message::{CANAerospaceFrame, Payload, RawMessage};
 use types::{DataType, MessageCode, MessageType, ServiceCode};
+
+use crate::message::CANAerospaceMessage;
 
 pub mod types;
 pub mod message;
 pub mod driver;
+pub mod handler;
 // #[cfg(feature = "stm32f1xx")]
 pub mod bxcan;
 
 
-pub trait CANAerospaceCallbackHandler {
-
-    /// CANAerospace Service Request Handler
-    /// If returns message then it will be automatically sent as response
-    /// If it returns (x, None) then there will be no response for the message. (x stands for Any)
-    fn handle_service_request(&self, message_type: &MessageType, service_code: &ServiceCode, message_code: &MessageCode, data: &DataType) 
-                    -> (Option<MessageCode>, Option<DataType>);
-    
-    /// CANAerospace Emergency Event Data Handler
-    fn handle_emergency_event(&self, message_type: &MessageType);
-}
 
 #[derive(Debug)]
 pub struct CANAerospaceLite<D,H> where
     D: CANAerospaceDriver,
-    H: CANAerospaceCallbackHandler {
+    H: CANAerospaceHandler {
     pub node_id:u8,
     pub nod_count: u8,
     pub driver: D,
-    pub callback_handler: H
+    pub(crate) handler: Option<H>,
 }
 
 
 
 impl<D, H> CANAerospaceLite<D, H> where
     D: CANAerospaceDriver,
-    H: CANAerospaceCallbackHandler {
+    H: CANAerospaceHandler {
 
-    pub fn new(node_id: u8, driver: D, callback_handler: H) -> Self { Self { node_id, nod_count: 0, driver, callback_handler } }
+    pub fn new(node_id: u8, driver: D) -> Self { Self { node_id, nod_count: 0, driver, handler: None } }
+
+    pub fn set_handler(&mut self, handler: H) {
+        self.handler = Some(handler);
+    }
+
+    pub fn get_handler(&mut self) -> Option<&mut H> {
+        self.handler.as_mut()
+    }
 
     /// EED messages
     pub fn send_urgent_message(&self, msg_type: MessageType, error_code: i16, operation_id: u8, location_id: u8) {
@@ -63,11 +64,11 @@ impl<D, H> CANAerospaceLite<D, H> where
 
     }
 
-    pub fn send_service_response(&self, target_id: u8, msg_type: &MessageType, msg_code: &MessageCode, data: &DataType) {
-
+    pub fn send_service_response(&mut self, message :CANAerospaceMessage) {
+        self.driver.send_frame(CANAerospaceFrame::from(message))
     }
 
-    
+
     pub fn send_extended_service_request(&self, target_id: u8, msg_type: MessageType, data: DataType, ext_code: u8) {
         todo!("Not implemented yet!");
     }
@@ -86,35 +87,37 @@ impl<D, H> CANAerospaceLite<D, H> where
 
     pub fn notify_receive_event(&mut self) {
         // call driver to receive the frame
-        if let Some(frame) = self.driver.recv_frame() {
-            match frame.message_type {
-                MessageType::EED(_) => todo!(),
-                
-                MessageType::NSH(message_type) => {
+        if let Some(handler) = &mut self.handler {
+            if let Some(frame) = self.driver.recv_frame() {
+                let message = CANAerospaceMessage::from(frame);
+                match message.message_type {
+                    MessageType::NSH(message_type) | MessageType::NSL(message_type) => {
+                        let service_code = message.service_code;
+                        let message_code = message.message_code;
 
-                    let (code, data) = self.callback_handler.handle_service_request(
-                        &frame.message_type,
-                        &frame.message.service_code,
-                        &frame.message.message_code,
-                        &DataType::from(&frame.message)
-                    );
+                        let (code, data) = handler.handle_service_request(message);
 
-                    if !data.is_none() {
-                        let msg_code = code.unwrap_or(frame.message.message_code);
-                        self.send_service_response(self.node_id, &MessageType::from(message_type + 1), &msg_code, &data.unwrap());
-                    }
-
-                },
-
-                MessageType::UDH(_) => todo!(),
-                MessageType::NOD(_) => todo!(),
-                MessageType::UDL(_) => todo!(),
-                MessageType::DSD(_) => todo!(),
-                MessageType::NSL(_) => todo!(),
-                MessageType::INVALID => todo!(),
+                        if !data.is_none() {
+                            let msg_code = code.unwrap_or(message_code);
+                            let response = CANAerospaceMessage {
+                                message_type: MessageType::from(message_type + 1),
+                                node_id: self.node_id,
+                                service_code: service_code,
+                                message_code: msg_code,
+                                data: data.unwrap(),
+                            };
+                            self.send_service_response(response);
+                        }
+                    },
+                    MessageType::EED(_) | MessageType::UDH(_) |
+                    MessageType::NOD(_) | MessageType::UDL(_) |
+                    MessageType::DSD(_) => {
+                        handler.handle_messages(message);
+                    },
+                    MessageType::INVALID => todo!(),
+                }
             }
         }
-        todo!("Not implemented yet!");
     }
 
     pub fn notify_transmit_event(&self) {

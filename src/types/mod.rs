@@ -1,8 +1,11 @@
+use core::convert::TryInto;
+
 use crate::message::RawMessage;
 
 
 pub type MessageCode = u8;
 pub type ServiceCode = u8;
+pub type NodeId = u8;
 
 #[derive(Clone, Debug)]
 pub enum ServiceCodeEnum {
@@ -26,7 +29,7 @@ pub enum ServiceCodeEnum {
     FSS = 0x8,
     /// Test Control Service
     TCS = 0x9,
-    /// CAN Baudrate Setting Service 
+    /// CAN Baudrate Setting Service
     BSS = 0xA,
     /// NodeId Setting Service
     NIS = 0xB,
@@ -42,7 +45,7 @@ pub enum ServiceCodeEnum {
 
 
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum MessageType {
     /// Emergency Event Data \[0,127\]
     /// Transmitted asynchronously whenever a situation requiring immediate action occurs.
@@ -114,7 +117,7 @@ impl MessageType {
                 id
             },
             MessageType::INVALID => u16::MAX,
-        }        
+        }
     }
 }
 
@@ -133,7 +136,7 @@ impl From<u16> for MessageType {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum DataType {
     NODATA,
     ERROR(u32),
@@ -172,7 +175,7 @@ pub enum DataType {
 }
 
 impl DataType {
-    pub fn type_id(&self) -> u8 {        
+    pub fn type_id(&self) -> u8 {
         match *self {
             DataType::NODATA => 0x0,
             DataType::ERROR(_) => 0x1,
@@ -208,6 +211,27 @@ impl DataType {
             DataType::DOUBLEL(_) => 0x1F,
             DataType::RESVD(_) => 0x20,
             DataType::UDEF { value: _, type_id } => type_id,
+        }
+    }
+
+    pub fn len(&self) -> u8 {
+        match *self {
+            DataType::NODATA | DataType::RESVD(_) => 0,
+
+            DataType::ERROR(_) | DataType::FLOAT(_) | DataType::LONG(_) | DataType::ULONG(_) |
+            DataType::BLONG(_) | DataType::SHORT2(_, _) | DataType::USHORT2(_, _) |
+            DataType::BSHORT2(_, _) | DataType::CHAR4(_, _, _, _) | DataType::UCHAR4(_, _, _, _) |
+            DataType::BCHAR4(_, _, _, _) | DataType::MEMID(_) | DataType::CHKSUM(_) | DataType::ACHAR4(_, _, _, _) |
+            DataType::DOUBLEH(_) | DataType::DOUBLEL(_) => 4,
+
+            DataType::SHORT(_) | DataType::USHORT(_) | DataType::BSHORT(_) | DataType::CHAR2(_, _) |
+            DataType::UCHAR2(_, _) | DataType::BCHAR2(_, _) | DataType::ACHAR2(_, _)=> 2,
+
+            DataType::CHAR(_) | DataType::UCHAR(_) | DataType::BCHAR(_) | DataType::ACHAR(_) => 1,
+
+            DataType::CHAR3(_, _, _) | DataType::UCHAR3(_, _, _) | DataType::BCHAR3(_, _, _) | DataType::ACHAR3(_, _, _)=> 3,
+
+            DataType::UDEF { value, type_id } => 4,
         }
     }
 
@@ -270,11 +294,11 @@ impl DataType {
 }
 
 fn as_u32(arr: &[u8]) -> u32 {
-    ((arr[0] as u32) << 24) + ((arr[1] as u32) << 16) + ((arr[2] as u32) << 8) + ((arr[3] as u32) << 0)
+    u32::from_be_bytes(arr[..4].try_into().unwrap())
 }
 
 fn as_u16(arr: &[u8]) -> u16 {
-    ((arr[0] as u16) << 8) + ((arr[1] as u16) << 0)
+    u16::from_be_bytes(arr[..2].try_into().unwrap())
 }
 
 impl From<(u8, &[u8])> for DataType {

@@ -1,10 +1,57 @@
-use crate::types::{MessageType};
+use crate::types::{DataType, MessageCode, MessageType, NodeId, ServiceCode};
 
+#[derive(Clone, Debug)]
+pub struct CANAerospaceMessage {
+    pub message_type: MessageType,
+    pub node_id: NodeId,
+    pub service_code: ServiceCode,
+    pub message_code: MessageCode,
+    pub data: DataType,
+}
+
+impl CANAerospaceMessage {
+    pub fn new(message_type: MessageType, node_id: NodeId, service_code: ServiceCode, message_code: MessageCode, data: DataType) -> Self {
+        Self {
+            message_type,
+            node_id,
+            service_code,
+            message_code,
+            data,
+        }
+    }
+}
+
+impl From<CANAerospaceFrame> for CANAerospaceMessage {
+    fn from(frame: CANAerospaceFrame) -> Self {
+        Self {
+            message_type: frame.message_type,
+            node_id: frame.message.node_id,
+            service_code: frame.message.service_code,
+            message_code: frame.message.message_code,
+            data: DataType::from((frame.message.data_type, &frame.message.payload.data[..])),
+        }
+    }
+}
 
 #[derive(Clone, Debug)]
 pub struct CANAerospaceFrame {
     pub message_type: MessageType,
     pub message: RawMessage
+}
+
+impl From<CANAerospaceMessage> for CANAerospaceFrame {
+    fn from(message: CANAerospaceMessage) -> Self {
+        Self {
+            message_type: message.message_type,
+            message: RawMessage {
+                node_id: message.node_id,
+                data_type: message.data.type_id(),
+                service_code: message.service_code,
+                message_code: message.message_code,
+                payload: Payload::from(message.data.to_be_bytes())
+            }
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -81,6 +128,15 @@ impl Payload {
             len: arr.len() as u8,
             data
         })
+    }
+}
+
+impl From<&DataType> for Payload {
+    fn from(data: &DataType) -> Self {
+        Self {
+            len: 4,
+            data: data.to_be_bytes(),
+        }
     }
 }
 
