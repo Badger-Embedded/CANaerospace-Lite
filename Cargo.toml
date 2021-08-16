@@ -1,9 +1,10 @@
 [package]
 name = "can_aerospace_lite"
+authors = ["Talha Can Havadar <talhahavadar@hotmail.com>"]
 description = "A lite version of CAN Aerospace Implementation according to 'Interface specification for airborne CAN applications V 1.7'"
 keywords = ["canbus", "aerospace", "embedded"]
 categories = ["embedded", "network-programming"]
-version = "0.0.1"
+version = "0.1.0"
 edition = "2018"
 homepage = "https://github.com/Badger-Embedded/CANaerospace-Lite"
 license = "LGPL-3.0-only"
