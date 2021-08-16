@@ -1,22 +1,40 @@
+//! # CANAeropsace - Message
+//! All wrappers of CANAerospace is defined in this module.
 use core::cmp::Ordering;
 
-use crate::types::{DataType, MessageCode, MessageType, NodeId, ServiceCode};
+use crate::types::{DataType, MessageCode, MessageType, NodeId, ServiceCode, ServiceCodeEnum};
 
+/// Higher level abstraction of [CANAerospaceFrame].
+///
+/// Constructable from [CANAerospaceFrame] by using [From] trait.
 #[derive(Clone, Debug)]
 pub struct CANAerospaceMessage {
+    /// Type of the message, typically CAN identifier of the message
     pub message_type: MessageType,
+
+    /// If `message_type` is one of [MessageType::NSH] or [MessageType::NSL]
+    /// then it indicates the target, otherwise it indicates the sender node
     pub node_id: NodeId,
-    pub service_code: ServiceCode,
+
+    /// Indicates service code for service messages
+    ///
+    /// [ServiceCodeEnum::IDS] service code will be automatically replied by [crate::CANAerospaceLite]
+    pub service_code: ServiceCodeEnum,
+
+    /// Sequence number of message
     pub message_code: MessageCode,
+
+    /// Payload of the message
     pub data: DataType,
 }
 
 impl CANAerospaceMessage {
+    /// Creates new instance of [CANAerospaceMessage]
     pub fn new(message_type: MessageType, node_id: NodeId, service_code: ServiceCode, message_code: MessageCode, data: DataType) -> Self {
         Self {
             message_type,
             node_id,
-            service_code,
+            service_code: ServiceCodeEnum::from(service_code),
             message_code,
             data,
         }
@@ -28,16 +46,23 @@ impl From<CANAerospaceFrame> for CANAerospaceMessage {
         Self {
             message_type: frame.message_type,
             node_id: frame.message.node_id,
-            service_code: frame.message.service_code,
+            service_code: ServiceCodeEnum::from(frame.message.service_code),
             message_code: frame.message.message_code,
             data: DataType::from((frame.message.data_type, &frame.message.payload.data[..])),
         }
     }
 }
 
+/// Higher level abstraction of [RawMessage]
+///
+/// Takes [RawMessage] as `message` and appends `message_type` information.
+/// Can be ordered by `message_type` and constructable from [CANAerospaceMessage] by using [From] trait.
 #[derive(Clone, Debug)]
 pub struct CANAerospaceFrame {
+    /// Type of the message, typically CAN identifier of the message
     pub message_type: MessageType,
+
+    /// Raw message information
     pub message: RawMessage
 }
 
@@ -68,7 +93,7 @@ impl From<CANAerospaceMessage> for CANAerospaceFrame {
             message: RawMessage {
                 node_id: message.node_id,
                 data_type: message.data.type_id(),
-                service_code: message.service_code,
+                service_code: message.service_code as u8,
                 message_code: message.message_code,
                 payload: Payload::from(message.data.to_be_bytes())
             }
@@ -76,6 +101,10 @@ impl From<CANAerospaceMessage> for CANAerospaceFrame {
     }
 }
 
+/// Raw payload data of a CAN frame in total 8 bytes.
+///
+/// It contains CANAerospace message header and also a payload
+/// Can be constructable from [u8] arrays with min 4 and max 8 lengths.
 #[derive(Clone, Debug)]
 pub struct RawMessage {
     pub node_id: u8,
@@ -86,6 +115,7 @@ pub struct RawMessage {
 }
 
 impl RawMessage {
+    /// Returns new instance of RawMessage using incoming data array
     pub fn new(data: &[u8]) -> Option<Self> {
         let node_id = data[0];
         let data_type = data[1];
@@ -100,6 +130,8 @@ impl RawMessage {
             payload
         })
     }
+
+    /// Returns an all zero empty [RawMessage]
     pub fn empty() -> Self {
         let payload = Payload::new(&[]).unwrap();
         Self {
@@ -136,6 +168,7 @@ macro_rules! raw_message_from_array {
     };
 }
 
+/// Raw byte representation of payload of CANAerospace message
 #[derive(Clone, Debug)]
 pub struct Payload {
     pub len: u8,

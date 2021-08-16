@@ -1,3 +1,7 @@
+//! # CANAeropsace - bxCAN
+//!
+//! All required conversions from/into bxcan is defined in this module to have seamless experience with bxcan
+
 use bxcan::{Data, Frame, Id, StandardId};
 
 use crate::{message::{CANAerospaceFrame, RawMessage}, types::MessageType};
@@ -36,6 +40,6 @@ impl From<&RawMessage> for Data {
         bytes[2] = message.service_code;
         bytes[3] = message.message_code;
         bytes[4..].copy_from_slice(&message.payload.data);
-        Data::new(&bytes).unwrap_or(Data::empty())        
+        Data::new(&bytes).unwrap_or(Data::empty())
     }
 }

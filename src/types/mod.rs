@@ -1,48 +1,94 @@
+//! # CANAerospace - Types
+//!
+//! All required types to implement CANAerospace protocol is defined in this module.
+
 use core::convert::TryInto;
 
 use crate::message::RawMessage;
 
-
 pub type MessageCode = u8;
 pub type ServiceCode = u8;
 pub type NodeId = u8;
+pub type IDSHeaderConfiguration = u8;
+
+#[derive(Clone, Copy, Debug)]
+pub struct IDSConfiguration(pub u8);
+
+#[derive(Clone, Copy, Debug)]
+pub struct HardwareRevision(pub u8);
+
+#[derive(Clone, Copy, Debug)]
+pub struct SoftwareRevision(pub u8);
+
+#[derive(Clone, Copy, Debug)]
+pub struct IDSResponse {
+    pub hw_rev: HardwareRevision,
+    pub sw_rev: SoftwareRevision,
+    pub configuration: IDSConfiguration,
+    pub header: IDSHeaderConfiguration
+}
 
 #[derive(Clone, Debug)]
 pub enum ServiceCodeEnum {
-    /// Identification Service
+    /// Identification Service (0x0)
     IDS = 0x0,
-    /// Node Synchronisation Service
+    /// Node Synchronisation Service (0x1)
     NSS = 0x1,
-    /// Data Download Service
+    /// Data Download Service (0x2)
     DDS = 0x2,
-    /// Data Upload Service
+    /// Data Upload Service (0x3)
     DUS = 0x3,
-    /// Simultation Control Service
+    /// Simultation Control Service (0x4)
     SCS = 0x4,
-    /// Transmission Interval Service
+    /// Transmission Interval Service (0x5)
     TIS = 0x5,
-    /// FLASH Programming Service
+    /// FLASH Programming Service (0x6)
     FPS = 0x6,
-    /// State Transmission Service
+    /// State Transmission Service (0x7)
     STS = 0x7,
-    /// Filter Setting Service
+    /// Filter Setting Service (0x8)
     FSS = 0x8,
-    /// Test Control Service
+    /// Test Control Service (0x9)
     TCS = 0x9,
-    /// CAN Baudrate Setting Service
+    /// CAN Baudrate Setting Service (0xA)
     BSS = 0xA,
-    /// NodeId Setting Service
+    /// NodeId Setting Service (0xB)
     NIS = 0xB,
-    /// Module Information Service
+    /// Module Information Service (0xC)
     MIS = 0xC,
-    /// Module Configuration Service
+    /// Module Configuration Service (0xD)
     MCS = 0xD,
-    /// CAN ID Setting Service
+    /// CAN ID Setting Service (0xE)
     CSS = 0xE,
-    /// CAN ID Distribution Setting Service
-    DSS = 0xF
+    /// CAN ID Distribution Setting Service (0xF)
+    DSS = 0xF,
+
+    UNKNOWN = 0xFF,
 }
 
+impl From<u8> for ServiceCodeEnum {
+    fn from(code: u8) -> Self {
+        match code {
+            code if code == ServiceCodeEnum::IDS as u8 => ServiceCodeEnum::IDS,
+            code if code == ServiceCodeEnum::NSS as u8 => ServiceCodeEnum::NSS,
+            code if code == ServiceCodeEnum::DDS as u8 => ServiceCodeEnum::DDS,
+            code if code == ServiceCodeEnum::DUS as u8 => ServiceCodeEnum::DUS,
+            code if code == ServiceCodeEnum::SCS as u8 => ServiceCodeEnum::SCS,
+            code if code == ServiceCodeEnum::TIS as u8 => ServiceCodeEnum::TIS,
+            code if code == ServiceCodeEnum::FPS as u8 => ServiceCodeEnum::FPS,
+            code if code == ServiceCodeEnum::STS as u8 => ServiceCodeEnum::STS,
+            code if code == ServiceCodeEnum::FSS as u8 => ServiceCodeEnum::FSS,
+            code if code == ServiceCodeEnum::TCS as u8 => ServiceCodeEnum::TCS,
+            code if code == ServiceCodeEnum::BSS as u8 => ServiceCodeEnum::BSS,
+            code if code == ServiceCodeEnum::NIS as u8 => ServiceCodeEnum::NIS,
+            code if code == ServiceCodeEnum::MIS as u8 => ServiceCodeEnum::MIS,
+            code if code == ServiceCodeEnum::MCS as u8 => ServiceCodeEnum::MCS,
+            code if code == ServiceCodeEnum::CSS as u8 => ServiceCodeEnum::CSS,
+            code if code == ServiceCodeEnum::DSS as u8 => ServiceCodeEnum::DSS,
+            _ => ServiceCodeEnum::UNKNOWN
+        }
+    }
+}
 
 
 #[derive(Clone, Copy, Debug)]
@@ -231,7 +277,7 @@ impl DataType {
 
             DataType::CHAR3(_, _, _) | DataType::UCHAR3(_, _, _) | DataType::BCHAR3(_, _, _) | DataType::ACHAR3(_, _, _)=> 3,
 
-            DataType::UDEF { value, type_id } => 4,
+            DataType::UDEF { value: _, type_id: _ } => 4,
         }
     }
 
