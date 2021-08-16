@@ -11,7 +11,7 @@ Add an entry to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-can_aerospace_lite = "0.0.1"
+can_aerospace_lite = "0.1.0"
 ```
 
 Check the [API Documentation](https://docs.rs/can_aerospace_lite/) for how to use the
