@@ -28,7 +28,7 @@ pub struct IDSResponse {
     pub header: IDSHeaderConfiguration,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ServiceCodeEnum {
     /// Identification Service (0x0)
     IDS = 0x0,
@@ -90,7 +90,7 @@ impl From<u8> for ServiceCodeEnum {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum MessageType {
     /// Emergency Event Data \[0,127\]
     /// Transmitted asynchronously whenever a situation requiring immediate action occurs.

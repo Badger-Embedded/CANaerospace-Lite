@@ -3,3 +3,4 @@
 //! Unit tests of whole library
 
 mod test_lib;
+mod test_message;
