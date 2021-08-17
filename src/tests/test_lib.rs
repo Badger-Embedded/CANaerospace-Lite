@@ -17,6 +17,8 @@ pub mod canaerospacelite {
 
     struct CANDriverMock;
     impl CANAerospaceDriver for CANDriverMock {
+
+        #[cfg(not(tarpaulin_include))]
         fn send_frame(&mut self, frame: CANAerospaceFrame) {
             unsafe {
                 DRIVER_SEND_FRAME_CALL += 1;
@@ -24,6 +26,7 @@ pub mod canaerospacelite {
             }
         }
 
+        #[cfg(not(tarpaulin_include))]
         fn recv_frame(&mut self) -> Option<CANAerospaceFrame> {
             unsafe {
                 DRIVER_RECV_FRAME_CALL += 1;
