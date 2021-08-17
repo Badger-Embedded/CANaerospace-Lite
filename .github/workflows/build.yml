@@ -29,5 +29,5 @@ jobs:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       with:
         # Extra command line arguments passed to cargo-tarpaulin
-        args: '--coveralls $COVERALLS_TOKEN'
+        args: '-v --coveralls $COVERALLS_TOKEN'
         out-type: Lcov
