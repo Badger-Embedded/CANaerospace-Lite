@@ -2,7 +2,7 @@
 //!
 //! CANAerospace requires a driver to interract with CAN hardware
 
-use crate::{message::{CANAerospaceFrame}};
+use crate::message::CANAerospaceFrame;
 
 /// CANAerospaceDriver trait is act like a gate to hardware for CANAerospaceLite
 pub trait CANAerospaceDriver {

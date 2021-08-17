@@ -1,4 +1,9 @@
-use can_aerospace_lite::{CANAerospaceLite, driver::CANAerospaceDriver, message::{CANAerospaceFrame, RawMessage}, types::{DataType, HardwareRevision, MessageType, SoftwareRevision}};
+use can_aerospace_lite::{
+    driver::CANAerospaceDriver,
+    message::{CANAerospaceFrame, RawMessage},
+    types::{DataType, HardwareRevision, MessageType, SoftwareRevision},
+    CANAerospaceLite,
+};
 
 static mut COUNT: u32 = 0;
 
@@ -14,37 +19,79 @@ impl CANAerospaceDriver for CANDriver {
             return match COUNT {
                 1 => Some(CANAerospaceFrame {
                     message_type: MessageType::NSH(128),
-                    message: RawMessage::from([10, DataType::ULONG(0).type_id(), 2, 3, 0xBA, 0xBA, 0xDE, 0xDE]),
+                    message: RawMessage::from([
+                        10,
+                        DataType::ULONG(0).type_id(),
+                        2,
+                        3,
+                        0xBA,
+                        0xBA,
+                        0xDE,
+                        0xDE,
+                    ]),
                 }),
                 0 => Some(CANAerospaceFrame {
                     message_type: MessageType::NOD(300),
-                    message: RawMessage::from([0, DataType::BSHORT2(0,0).type_id(), 2, 3, 0xDE, 0xDE, 0xDE, 0xDE]),
+                    message: RawMessage::from([
+                        0,
+                        DataType::BSHORT2(0, 0).type_id(),
+                        2,
+                        3,
+                        0xDE,
+                        0xDE,
+                        0xDE,
+                        0xDE,
+                    ]),
                 }),
                 2 => Some(CANAerospaceFrame {
                     message_type: MessageType::UDH(200),
-                    message: RawMessage::from([0, DataType::BSHORT2(0,0).type_id(), 2, 3, 0xA, 0xB, 0xC, 0xD]),
+                    message: RawMessage::from([
+                        0,
+                        DataType::BSHORT2(0, 0).type_id(),
+                        2,
+                        3,
+                        0xA,
+                        0xB,
+                        0xC,
+                        0xD,
+                    ]),
                 }),
                 3 => Some(CANAerospaceFrame {
                     message_type: MessageType::NSH(128),
-                    message: RawMessage::from([10, DataType::NODATA.type_id(), 0, 3, 0xFB, 0xFB, 0xDE, 0xDE]),
+                    message: RawMessage::from([
+                        10,
+                        DataType::NODATA.type_id(),
+                        0,
+                        3,
+                        0xFB,
+                        0xFB,
+                        0xDE,
+                        0xDE,
+                    ]),
                 }),
-                _ => None
-            }
+                _ => None,
+            };
         }
     }
 }
 
 fn main() {
-    let mut can_aerospace: CANAerospaceLite<CANDriver> = CANAerospaceLite::new(10, CANDriver{});
+    let mut can_aerospace: CANAerospaceLite<CANDriver> = CANAerospaceLite::new(10, CANDriver {});
     can_aerospace.set_hw_revision(HardwareRevision(0x02));
     can_aerospace.set_sw_revision(SoftwareRevision(0x01));
 
     can_aerospace.notify_receive_event();
-    unsafe { COUNT += 1; }
+    unsafe {
+        COUNT += 1;
+    }
     can_aerospace.notify_receive_event();
-    unsafe { COUNT += 1; }
+    unsafe {
+        COUNT += 1;
+    }
     can_aerospace.notify_receive_event();
-    unsafe { COUNT += 1; }
+    unsafe {
+        COUNT += 1;
+    }
     can_aerospace.notify_receive_event();
     can_aerospace.notify_receive_event();
 
@@ -59,5 +106,4 @@ fn main() {
     println!("Message {:#X?}", message);
     message = can_aerospace.read_message().unwrap();
     println!("Message {:#X?}", message);
-
 }

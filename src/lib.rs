@@ -8,16 +8,19 @@
 
 #![no_std]
 // #![feature(doc_cfg)]
-use heapless::{BinaryHeap, binary_heap::{Min}};
+use heapless::{binary_heap::Min, BinaryHeap};
 
-use crate::{driver::CANAerospaceDriver, types::MessageType};
-use crate::types::{DataType, HardwareRevision, IDSConfiguration, IDSHeaderConfiguration, IDSResponse, ServiceCodeEnum, SoftwareRevision};
 use crate::message::{CANAerospaceFrame, CANAerospaceMessage};
+use crate::types::{
+    DataType, HardwareRevision, IDSConfiguration, IDSHeaderConfiguration, IDSResponse,
+    ServiceCodeEnum, SoftwareRevision,
+};
+use crate::{driver::CANAerospaceDriver, types::MessageType};
 
+pub mod driver;
+pub mod message;
 mod tests;
 pub mod types;
-pub mod message;
-pub mod driver;
 
 #[cfg(feature = "bxcan-support")]
 // #[cfg(any(feature = "bxcan-support", doc))]
@@ -93,20 +96,21 @@ pub const IDS_MSG_HEADER_STANDARD: IDSHeaderConfiguration = 0;
 ///```
 ///
 #[derive(Debug)]
-pub struct CANAerospaceLite<D> where
-    D: CANAerospaceDriver {
+pub struct CANAerospaceLite<D>
+where
+    D: CANAerospaceDriver,
+{
     pub node_id: u8,
     identification: IDSResponse,
     nod_count: u8,
     driver: D,
-    pub(crate) rx_queue: BinaryHeap<CANAerospaceFrame, Min, 10>
+    pub(crate) rx_queue: BinaryHeap<CANAerospaceFrame, Min, 10>,
 }
 
-
-
-impl<D> CANAerospaceLite<D> where
-    D: CANAerospaceDriver {
-
+impl<D> CANAerospaceLite<D>
+where
+    D: CANAerospaceDriver,
+{
     /// Creates new instance of [CANAerospaceLite].
     /// ```
     /// # use can_aerospace_lite::{CANAerospaceLite, driver::CANAerospaceDriver, message::{CANAerospaceFrame, RawMessage}, types::{DataType, HardwareRevision, MessageType, SoftwareRevision}};
@@ -129,7 +133,7 @@ impl<D> CANAerospaceLite<D> where
             },
             nod_count: 0,
             driver,
-            rx_queue: BinaryHeap::new()
+            rx_queue: BinaryHeap::new(),
         }
     }
 
@@ -214,36 +218,43 @@ impl<D> CANAerospaceLite<D> where
                     } else {
                         self.rx_queue.push(frame).unwrap_or(());
                     }
-                },
-                types::MessageType::INVALID => { /* do nothing */ },
-                _ => { self.rx_queue.push(frame).unwrap_or(()); }
+                }
+                types::MessageType::INVALID => { /* do nothing */ }
+                _ => {
+                    self.rx_queue.push(frame).unwrap_or(());
+                }
             };
         }
     }
 
     /// Handles all the service requests and filters them according to `node_id`
     fn handle_service_request(&mut self, frame: CANAerospaceFrame) {
-        if frame.message.node_id == self.node_id  || frame.message.node_id == 0 {
+        if frame.message.node_id == self.node_id || frame.message.node_id == 0 {
             match ServiceCodeEnum::from(frame.message.service_code) {
                 ServiceCodeEnum::IDS => {
                     let response_message_type = match frame.message_type {
                         MessageType::NSH(id) => MessageType::NSH(id + 1),
                         MessageType::NSL(id) => MessageType::NSL(id + 1),
-                        _ => frame.message_type
+                        _ => frame.message_type,
                     };
-                    let message = CANAerospaceMessage{
+                    let message = CANAerospaceMessage {
                         message_type: response_message_type,
                         node_id: self.node_id,
                         service_code: ServiceCodeEnum::IDS,
                         message_code: frame.message.message_code,
-                        data: DataType::UCHAR4(self.identification.hw_rev.0, self.identification.sw_rev.0,
-                                               self.identification.configuration.0, self.identification.header),
+                        data: DataType::UCHAR4(
+                            self.identification.hw_rev.0,
+                            self.identification.sw_rev.0,
+                            self.identification.configuration.0,
+                            self.identification.header,
+                        ),
                     };
                     self.send_message(message);
-                },
-                _ => { self.rx_queue.push(frame).unwrap_or(()); }
+                }
+                _ => {
+                    self.rx_queue.push(frame).unwrap_or(());
+                }
             };
         }
     }
-
 }

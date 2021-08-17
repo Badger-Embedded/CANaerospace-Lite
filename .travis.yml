@@ -2,11 +2,6 @@ language: rust
 sudo: false
 cache: cargo
 
-rust:
-- stable
-- beta
-- nightly
-
 os:
 - linux
 - osx
@@ -27,7 +22,6 @@ matrix:
 
   include:
   - name: 'Rust: format check'
-    rust: stable
     install:
     - rustup component add rustfmt
     script:
@@ -35,14 +29,12 @@ matrix:
 
   - name: 'Rust: style check'
     if: env(ENABLE_CLIPPY) = 1
-    rust: stable
     install:
     - rustup component add clippy
     script:
     - cargo clippy --verbose --all -- -D warnings
 
   - name: 'Rust: code coverage'
-    rust: stable
     os: linux
     install:
     - cargo install cargo-tarpaulin

@@ -25,7 +25,7 @@ pub struct IDSResponse {
     pub hw_rev: HardwareRevision,
     pub sw_rev: SoftwareRevision,
     pub configuration: IDSConfiguration,
-    pub header: IDSHeaderConfiguration
+    pub header: IDSHeaderConfiguration,
 }
 
 #[derive(Clone, Debug)]
@@ -85,11 +85,10 @@ impl From<u8> for ServiceCodeEnum {
             code if code == ServiceCodeEnum::MCS as u8 => ServiceCodeEnum::MCS,
             code if code == ServiceCodeEnum::CSS as u8 => ServiceCodeEnum::CSS,
             code if code == ServiceCodeEnum::DSS as u8 => ServiceCodeEnum::DSS,
-            _ => ServiceCodeEnum::UNKNOWN
+            _ => ServiceCodeEnum::UNKNOWN,
         }
     }
 }
-
 
 #[derive(Clone, Copy, Debug)]
 pub enum MessageType {
@@ -114,7 +113,7 @@ pub enum MessageType {
     /// Low Priority Node Service Data \[2000,2031\]
     /// Transmitted asynchronously or cyclic for test & maintenance actions (16 channels).
     NSL(u16),
-    INVALID
+    INVALID,
 }
 
 impl MessageType {
@@ -125,43 +124,43 @@ impl MessageType {
                     panic!("CANaerospace: Invalid Message ID({}) for EED Message.", id);
                 }
                 id
-            },
+            }
             MessageType::NSH(id) => {
                 if id < 0x80 || id > 0xC7 {
                     panic!("CANaerospace: Invalid Message ID({}) for NSH Message.", id);
                 }
                 id
-            },
+            }
             MessageType::UDH(id) => {
                 if id < 0xC8 || id > 0x12B {
                     panic!("CANaerospace: Invalid Message ID({}) for UDH Message.", id);
                 }
                 id
-            },
+            }
             MessageType::NOD(id) => {
                 if id < 0x12C || id > 0x707 {
                     panic!("CANaerospace: Invalid Message ID({}) for NOD Message.", id);
                 }
                 id
-            },
+            }
             MessageType::UDL(id) => {
                 if id < 0x708 || id > 0x76B {
                     panic!("CANaerospace: Invalid Message ID({}) for UDL Message.", id);
                 }
                 id
-            },
+            }
             MessageType::DSD(id) => {
                 if id < 0x76C || id > 0x7CF {
                     panic!("CANaerospace: Invalid Message ID({}) for DSD Message.", id);
                 }
                 id
-            },
+            }
             MessageType::NSL(id) => {
                 if id < 0x7D0 || id > 0x7EF {
                     panic!("CANaerospace: Invalid Message ID({}) for NSL Message.", id);
                 }
                 id
-            },
+            }
             MessageType::INVALID => u16::MAX,
         }
     }
@@ -170,14 +169,14 @@ impl MessageType {
 impl From<u16> for MessageType {
     fn from(raw_id: u16) -> Self {
         match raw_id {
-            0..=127     => MessageType::EED(raw_id),
-            128..=199   => MessageType::NSH(raw_id),
-            200..=299   => MessageType::UDH(raw_id),
-            300..=1799  => MessageType::NOD(raw_id),
+            0..=127 => MessageType::EED(raw_id),
+            128..=199 => MessageType::NSH(raw_id),
+            200..=299 => MessageType::UDH(raw_id),
+            300..=1799 => MessageType::NOD(raw_id),
             1800..=1899 => MessageType::UDL(raw_id),
             1900..=1999 => MessageType::DSD(raw_id),
             2000..=2031 => MessageType::NSL(raw_id),
-            _ => MessageType::INVALID
+            _ => MessageType::INVALID,
         }
     }
 }
@@ -196,28 +195,28 @@ pub enum DataType {
     CHAR(i8),
     UCHAR(u8),
     BCHAR(u8),
-    SHORT2(i16,i16),
-    USHORT2(u16,u16),
-    BSHORT2(u16,u16),
-    CHAR4(i8,i8,i8,i8),
-    UCHAR4(u8,u8,u8,u8),
-    BCHAR4(u8,u8,u8,u8),
-    CHAR2(i8,i8),
-    UCHAR2(u8,u8),
-    BCHAR2(u8,u8),
+    SHORT2(i16, i16),
+    USHORT2(u16, u16),
+    BSHORT2(u16, u16),
+    CHAR4(i8, i8, i8, i8),
+    UCHAR4(u8, u8, u8, u8),
+    BCHAR4(u8, u8, u8, u8),
+    CHAR2(i8, i8),
+    UCHAR2(u8, u8),
+    BCHAR2(u8, u8),
     MEMID(u32),
     CHKSUM(u32),
     ACHAR(u8),
-    ACHAR2(u8,u8),
-    ACHAR4(u8,u8,u8,u8),
-    CHAR3(i8,i8,i8),
-    UCHAR3(u8,u8,u8),
-    BCHAR3(u8,u8,u8),
-    ACHAR3(u8,u8,u8),
+    ACHAR2(u8, u8),
+    ACHAR4(u8, u8, u8, u8),
+    CHAR3(i8, i8, i8),
+    UCHAR3(u8, u8, u8),
+    BCHAR3(u8, u8, u8),
+    ACHAR3(u8, u8, u8),
     DOUBLEH(u32),
     DOUBLEL(u32),
     RESVD(u32),
-    UDEF{value:u32, type_id:u8}
+    UDEF { value: u32, type_id: u8 },
 }
 
 impl DataType {
@@ -264,20 +263,42 @@ impl DataType {
         match *self {
             DataType::NODATA | DataType::RESVD(_) => 0,
 
-            DataType::ERROR(_) | DataType::FLOAT(_) | DataType::LONG(_) | DataType::ULONG(_) |
-            DataType::BLONG(_) | DataType::SHORT2(_, _) | DataType::USHORT2(_, _) |
-            DataType::BSHORT2(_, _) | DataType::CHAR4(_, _, _, _) | DataType::UCHAR4(_, _, _, _) |
-            DataType::BCHAR4(_, _, _, _) | DataType::MEMID(_) | DataType::CHKSUM(_) | DataType::ACHAR4(_, _, _, _) |
-            DataType::DOUBLEH(_) | DataType::DOUBLEL(_) => 4,
+            DataType::ERROR(_)
+            | DataType::FLOAT(_)
+            | DataType::LONG(_)
+            | DataType::ULONG(_)
+            | DataType::BLONG(_)
+            | DataType::SHORT2(_, _)
+            | DataType::USHORT2(_, _)
+            | DataType::BSHORT2(_, _)
+            | DataType::CHAR4(_, _, _, _)
+            | DataType::UCHAR4(_, _, _, _)
+            | DataType::BCHAR4(_, _, _, _)
+            | DataType::MEMID(_)
+            | DataType::CHKSUM(_)
+            | DataType::ACHAR4(_, _, _, _)
+            | DataType::DOUBLEH(_)
+            | DataType::DOUBLEL(_) => 4,
 
-            DataType::SHORT(_) | DataType::USHORT(_) | DataType::BSHORT(_) | DataType::CHAR2(_, _) |
-            DataType::UCHAR2(_, _) | DataType::BCHAR2(_, _) | DataType::ACHAR2(_, _)=> 2,
+            DataType::SHORT(_)
+            | DataType::USHORT(_)
+            | DataType::BSHORT(_)
+            | DataType::CHAR2(_, _)
+            | DataType::UCHAR2(_, _)
+            | DataType::BCHAR2(_, _)
+            | DataType::ACHAR2(_, _) => 2,
 
             DataType::CHAR(_) | DataType::UCHAR(_) | DataType::BCHAR(_) | DataType::ACHAR(_) => 1,
 
-            DataType::CHAR3(_, _, _) | DataType::UCHAR3(_, _, _) | DataType::BCHAR3(_, _, _) | DataType::ACHAR3(_, _, _)=> 3,
+            DataType::CHAR3(_, _, _)
+            | DataType::UCHAR3(_, _, _)
+            | DataType::BCHAR3(_, _, _)
+            | DataType::ACHAR3(_, _, _) => 3,
 
-            DataType::UDEF { value: _, type_id: _ } => 4,
+            DataType::UDEF {
+                value: _,
+                type_id: _,
+            } => 4,
         }
     }
 
@@ -292,11 +313,11 @@ impl DataType {
             DataType::SHORT(d) => {
                 let d_bytes = d.to_be_bytes();
                 [d_bytes[0], d_bytes[1], 0, 0]
-            },
+            }
             DataType::USHORT(d) | DataType::BSHORT(d) => {
                 let d_bytes = d.to_be_bytes();
                 [d_bytes[0], d_bytes[1], 0, 0]
-            },
+            }
             DataType::CHAR(d) => [d as u8, 0, 0, 0],
             DataType::UCHAR(d) => [d, 0, 0, 0],
             DataType::BCHAR(d) => [d, 0, 0, 0],
@@ -304,23 +325,23 @@ impl DataType {
                 let a_bytes = a.to_be_bytes();
                 let b_bytes = b.to_be_bytes();
                 [a_bytes[0], a_bytes[1], b_bytes[0], b_bytes[1]]
-            },
+            }
             DataType::USHORT2(a, b) => {
                 let a_bytes = a.to_be_bytes();
                 let b_bytes = b.to_be_bytes();
                 [a_bytes[0], a_bytes[1], b_bytes[0], b_bytes[1]]
-            },
+            }
             DataType::BSHORT2(a, b) => {
                 let a_bytes = a.to_be_bytes();
                 let b_bytes = b.to_be_bytes();
                 [a_bytes[0], a_bytes[1], b_bytes[0], b_bytes[1]]
-            },
-            DataType::CHAR4(a, b, c, d) => [a as u8,b as u8,c as u8,d as u8],
-            DataType::UCHAR4(a, b, c, d) => [a as u8,b as u8,c as u8,d as u8],
-            DataType::BCHAR4(a, b, c, d) => [a as u8,b as u8,c as u8,d as u8],
-            DataType::CHAR2(a, b) => [a as u8,b as u8, 0, 0],
-            DataType::UCHAR2(a, b) => [a as u8,b as u8, 0, 0],
-            DataType::BCHAR2(a, b) => [a as u8,b as u8, 0, 0],
+            }
+            DataType::CHAR4(a, b, c, d) => [a as u8, b as u8, c as u8, d as u8],
+            DataType::UCHAR4(a, b, c, d) => [a as u8, b as u8, c as u8, d as u8],
+            DataType::BCHAR4(a, b, c, d) => [a as u8, b as u8, c as u8, d as u8],
+            DataType::CHAR2(a, b) => [a as u8, b as u8, 0, 0],
+            DataType::UCHAR2(a, b) => [a as u8, b as u8, 0, 0],
+            DataType::BCHAR2(a, b) => [a as u8, b as u8, 0, 0],
             DataType::MEMID(d) => d.to_be_bytes(),
             DataType::CHKSUM(d) => d.to_be_bytes(),
             DataType::ACHAR(a) => [a, 0, 0, 0],
@@ -333,10 +354,9 @@ impl DataType {
             DataType::DOUBLEH(d) => d.to_be_bytes(),
             DataType::DOUBLEL(d) => d.to_be_bytes(),
             DataType::RESVD(d) => d.to_be_bytes(),
-            DataType::UDEF { value, type_id: _ } => value.to_be_bytes()
+            DataType::UDEF { value, type_id: _ } => value.to_be_bytes(),
         }
     }
-
 }
 
 fn as_u32(arr: &[u8]) -> u32 {
@@ -351,40 +371,43 @@ impl From<(u8, &[u8])> for DataType {
     fn from(data: (u8, &[u8])) -> Self {
         let (t, arr) = data;
         match t {
-            0x0     => DataType::NODATA,
-            0x1     => DataType::ERROR(as_u32(arr)),
-            0x2     => DataType::FLOAT(as_u32(arr) as f32),
-            0x3     => DataType::LONG(as_u32(arr) as i32),
-            0x4     => DataType::ULONG(as_u32(arr)),
-            0x5     => DataType::BLONG(as_u32(arr)),
-            0x6     => DataType::SHORT(as_u16(arr) as i16),
-            0x7     => DataType::USHORT(as_u16(arr)),
-            0x8     => DataType::BSHORT(as_u16(arr)),
-            0x9     => DataType::CHAR(arr[0] as i8),
-            0xA     => DataType::UCHAR(arr[0] as u8),
-            0xB     => DataType::BCHAR(arr[0] as u8),
-            0xC     => DataType::SHORT2(as_u16(arr) as i16, as_u16(&arr[2..]) as i16),
-            0xD     => DataType::USHORT2(as_u16(arr), as_u16(arr)),
-            0xE     => DataType::BSHORT2(as_u16(arr), as_u16(&arr[2..])),
-            0xF     => DataType::CHAR4(arr[0] as i8, arr[1] as i8, arr[2] as i8, arr[3] as i8),
-            0x10    => DataType::UCHAR4(arr[0], arr[1], arr[2], arr[3]),
-            0x11    => DataType::BCHAR4(arr[0], arr[1], arr[2], arr[3]),
-            0x12    => DataType::CHAR2(arr[0] as i8, arr[1] as i8),
-            0x13    => DataType::UCHAR2(arr[0], arr[1]),
-            0x14    => DataType::BCHAR2(arr[0], arr[1]),
-            0x15    => DataType::MEMID(as_u32(arr)),
-            0x16    => DataType::CHKSUM(as_u32(arr)),
-            0x17    => DataType::ACHAR(arr[0]),
-            0x18    => DataType::ACHAR2(arr[0], arr[1]),
-            0x19    => DataType::ACHAR4(arr[0], arr[1], arr[2], arr[3]),
-            0x1A    => DataType::CHAR3(arr[0] as i8, arr[1] as i8, arr[2] as i8),
-            0x1B    => DataType::UCHAR3(arr[0], arr[1], arr[2]),
-            0x1C    => DataType::BCHAR3(arr[0], arr[1], arr[2]),
-            0x1D    => DataType::ACHAR3(arr[0], arr[1], arr[2]),
-            0x1E    => DataType::DOUBLEH(as_u32(arr)),
-            0x1F    => DataType::DOUBLEL(as_u32(arr)),
-            0x20    => DataType::RESVD(as_u32(arr)),
-            _       => DataType::UDEF { value: as_u32(arr), type_id: t }
+            0x0 => DataType::NODATA,
+            0x1 => DataType::ERROR(as_u32(arr)),
+            0x2 => DataType::FLOAT(as_u32(arr) as f32),
+            0x3 => DataType::LONG(as_u32(arr) as i32),
+            0x4 => DataType::ULONG(as_u32(arr)),
+            0x5 => DataType::BLONG(as_u32(arr)),
+            0x6 => DataType::SHORT(as_u16(arr) as i16),
+            0x7 => DataType::USHORT(as_u16(arr)),
+            0x8 => DataType::BSHORT(as_u16(arr)),
+            0x9 => DataType::CHAR(arr[0] as i8),
+            0xA => DataType::UCHAR(arr[0] as u8),
+            0xB => DataType::BCHAR(arr[0] as u8),
+            0xC => DataType::SHORT2(as_u16(arr) as i16, as_u16(&arr[2..]) as i16),
+            0xD => DataType::USHORT2(as_u16(arr), as_u16(arr)),
+            0xE => DataType::BSHORT2(as_u16(arr), as_u16(&arr[2..])),
+            0xF => DataType::CHAR4(arr[0] as i8, arr[1] as i8, arr[2] as i8, arr[3] as i8),
+            0x10 => DataType::UCHAR4(arr[0], arr[1], arr[2], arr[3]),
+            0x11 => DataType::BCHAR4(arr[0], arr[1], arr[2], arr[3]),
+            0x12 => DataType::CHAR2(arr[0] as i8, arr[1] as i8),
+            0x13 => DataType::UCHAR2(arr[0], arr[1]),
+            0x14 => DataType::BCHAR2(arr[0], arr[1]),
+            0x15 => DataType::MEMID(as_u32(arr)),
+            0x16 => DataType::CHKSUM(as_u32(arr)),
+            0x17 => DataType::ACHAR(arr[0]),
+            0x18 => DataType::ACHAR2(arr[0], arr[1]),
+            0x19 => DataType::ACHAR4(arr[0], arr[1], arr[2], arr[3]),
+            0x1A => DataType::CHAR3(arr[0] as i8, arr[1] as i8, arr[2] as i8),
+            0x1B => DataType::UCHAR3(arr[0], arr[1], arr[2]),
+            0x1C => DataType::BCHAR3(arr[0], arr[1], arr[2]),
+            0x1D => DataType::ACHAR3(arr[0], arr[1], arr[2]),
+            0x1E => DataType::DOUBLEH(as_u32(arr)),
+            0x1F => DataType::DOUBLEL(as_u32(arr)),
+            0x20 => DataType::RESVD(as_u32(arr)),
+            _ => DataType::UDEF {
+                value: as_u32(arr),
+                type_id: t,
+            },
         }
     }
 }

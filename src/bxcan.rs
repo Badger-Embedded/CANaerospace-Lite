@@ -4,13 +4,16 @@
 
 use bxcan::{Data, Frame, Id, StandardId};
 
-use crate::{message::{CANAerospaceFrame, RawMessage}, types::MessageType};
+use crate::{
+    message::{CANAerospaceFrame, RawMessage},
+    types::MessageType,
+};
 
 impl From<Frame> for CANAerospaceFrame {
     fn from(frame: Frame) -> Self {
         let raw_id = match frame.id() {
             Id::Standard(id) => id.as_raw() as u32,
-            Id::Extended(id) => id.as_raw() as u32
+            Id::Extended(id) => id.as_raw() as u32,
         };
         let message: RawMessage = match frame.data() {
             Some(data) => RawMessage::new(data).unwrap(),
@@ -19,7 +22,7 @@ impl From<Frame> for CANAerospaceFrame {
         let message_type = MessageType::from(raw_id as u16);
         Self {
             message_type,
-            message
+            message,
         }
     }
 }

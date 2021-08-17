@@ -30,7 +30,13 @@ pub struct CANAerospaceMessage {
 
 impl CANAerospaceMessage {
     /// Creates new instance of [CANAerospaceMessage]
-    pub fn new(message_type: MessageType, node_id: NodeId, service_code: ServiceCode, message_code: MessageCode, data: DataType) -> Self {
+    pub fn new(
+        message_type: MessageType,
+        node_id: NodeId,
+        service_code: ServiceCode,
+        message_code: MessageCode,
+        data: DataType,
+    ) -> Self {
         Self {
             message_type,
             node_id,
@@ -63,7 +69,7 @@ pub struct CANAerospaceFrame {
     pub message_type: MessageType,
 
     /// Raw message information
-    pub message: RawMessage
+    pub message: RawMessage,
 }
 
 impl Ord for CANAerospaceFrame {
@@ -84,7 +90,7 @@ impl PartialEq for CANAerospaceFrame {
     }
 }
 
-impl Eq for CANAerospaceFrame{}
+impl Eq for CANAerospaceFrame {}
 
 impl From<CANAerospaceMessage> for CANAerospaceFrame {
     fn from(message: CANAerospaceMessage) -> Self {
@@ -95,8 +101,8 @@ impl From<CANAerospaceMessage> for CANAerospaceFrame {
                 data_type: message.data.type_id(),
                 service_code: message.service_code as u8,
                 message_code: message.message_code,
-                payload: Payload::from(message.data.to_be_bytes())
-            }
+                payload: Payload::from(message.data.to_be_bytes()),
+            },
         }
     }
 }
@@ -111,7 +117,7 @@ pub struct RawMessage {
     pub data_type: u8,
     pub service_code: u8,
     pub message_code: u8,
-    pub payload: Payload
+    pub payload: Payload,
 }
 
 impl RawMessage {
@@ -127,7 +133,7 @@ impl RawMessage {
             data_type,
             service_code,
             message_code,
-            payload
+            payload,
         })
     }
 
@@ -139,7 +145,7 @@ impl RawMessage {
             data_type: 0,
             service_code: 0,
             message_code: 0,
-            payload
+            payload,
         }
     }
 }
@@ -172,7 +178,7 @@ macro_rules! raw_message_from_array {
 #[derive(Clone, Debug)]
 pub struct Payload {
     pub len: u8,
-    pub data: [u8; 4]
+    pub data: [u8; 4],
 }
 
 impl Payload {
@@ -181,7 +187,7 @@ impl Payload {
         data[..arr.len()].copy_from_slice(&arr);
         Some(Self {
             len: arr.len() as u8,
-            data
+            data,
         })
     }
 }
@@ -214,4 +220,4 @@ macro_rules! payload_from_array {
 }
 
 raw_message_from_array!(4, 5, 6, 7, 8);
-payload_from_array!(0,1,2,3,4);
+payload_from_array!(0, 1, 2, 3, 4);
