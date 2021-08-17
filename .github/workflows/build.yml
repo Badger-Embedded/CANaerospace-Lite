@@ -25,6 +25,9 @@ jobs:
       # You may pin to the exact commit or the version.
       # uses: actions-rs/tarpaulin@60f0b12e5beec09ccca51758913f82d01889151c
       uses: actions-rs/tarpaulin@v0.1.0
+      env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       with:
         # Extra command line arguments passed to cargo-tarpaulin
-        args: '-v --coveralls ${{secrets.COVERALLS_REPO_TOKEN}}'
+        args: '--coveralls $COVERALLS_TOKEN'
+        out-type: Lcov
