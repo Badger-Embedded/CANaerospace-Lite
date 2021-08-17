@@ -1,18 +1,23 @@
-name: coverage
-on: [push]
+name:                           coverage
 
+on:                             [push]
 jobs:
   test:
-    name: coverage
-    runs-on: ubuntu-latest
+    name:                       coverage
+    runs-on:                    ubuntu-latest
     container:
-      image: xd009642/tarpaulin:develop-nightly
-      options: --security-opt seccomp=unconfined
+      image:                    xd009642/tarpaulin:develop-nightly
+      options:                  --security-opt seccomp=unconfined
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Generate code coverage
-        env:
-          COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      - name:                   Checkout repository
+        uses:                   actions/checkout@v2
+
+      - name:                   Generate code coverage
         run: |
-          cargo +nightly tarpaulin --verbose --all-features --coveralls $COVERALLS_TOKEN --out Lcov
+          cargo +nightly tarpaulin --verbose --all-features --workspace --out Xml
+
+      - name:                   Upload to codecov.io
+        uses:                   codecov/codecov-action@v1
+        with:
+          # token:                ${{secrets.CODECOV_TOKEN}} # not required for public repos
+          fail_ci_if_error:     true
