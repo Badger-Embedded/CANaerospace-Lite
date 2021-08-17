@@ -126,37 +126,37 @@ impl MessageType {
                 id
             }
             MessageType::NSH(id) => {
-                if id < 0x80 || id > 0xC7 {
+                if !(0x80..=0xC7).contains(&id) {
                     panic!("CANaerospace: Invalid Message ID({}) for NSH Message.", id);
                 }
                 id
             }
             MessageType::UDH(id) => {
-                if id < 0xC8 || id > 0x12B {
+                if !(0xC8..=0x12B).contains(&id) {
                     panic!("CANaerospace: Invalid Message ID({}) for UDH Message.", id);
                 }
                 id
             }
             MessageType::NOD(id) => {
-                if id < 0x12C || id > 0x707 {
+                if !(0x12C..=0x707).contains(&id) {
                     panic!("CANaerospace: Invalid Message ID({}) for NOD Message.", id);
                 }
                 id
             }
             MessageType::UDL(id) => {
-                if id < 0x708 || id > 0x76B {
+                if !(0x708..=0x76B).contains(&id) {
                     panic!("CANaerospace: Invalid Message ID({}) for UDL Message.", id);
                 }
                 id
             }
             MessageType::DSD(id) => {
-                if id < 0x76C || id > 0x7CF {
+                if !(0x76C..=0x7CF).contains(&id) {
                     panic!("CANaerospace: Invalid Message ID({}) for DSD Message.", id);
                 }
                 id
             }
             MessageType::NSL(id) => {
-                if id < 0x7D0 || id > 0x7EF {
+                if !(0x7D0..=0x7EF).contains(&id) {
                     panic!("CANaerospace: Invalid Message ID({}) for NSL Message.", id);
                 }
                 id
@@ -181,7 +181,7 @@ impl From<u16> for MessageType {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum DataType {
     NODATA,
     ERROR(u32),
@@ -259,6 +259,10 @@ impl DataType {
         }
     }
 
+    pub fn is_empty(&self) -> bool {
+        *self == DataType::NODATA
+    }
+
     pub fn len(&self) -> u8 {
         match *self {
             DataType::NODATA | DataType::RESVD(_) => 0,
@@ -302,8 +306,8 @@ impl DataType {
         }
     }
 
-    pub fn to_be_bytes(&self) -> [u8; 4] {
-        match *self {
+    pub fn to_be_bytes(self) -> [u8; 4] {
+        match self {
             DataType::NODATA => [0, 0, 0, 0],
             DataType::ERROR(d) => d.to_be_bytes(),
             DataType::FLOAT(d) => d.to_be_bytes(),

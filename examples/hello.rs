@@ -96,7 +96,6 @@ fn main() {
     can_aerospace.notify_receive_event();
 
     let mut message = can_aerospace.read_message().unwrap();
-    assert_eq!(message.message_type.id(), MessageType::NOD(300).id());
     println!("Message {:#X?}", message);
     message.message_type = MessageType::NSH(message.message_type.id() + 1);
     message.data = DataType::ULONG(0xDEAD_BEEF);

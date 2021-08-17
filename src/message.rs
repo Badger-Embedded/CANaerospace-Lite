@@ -183,7 +183,7 @@ pub struct Payload {
 
 impl Payload {
     pub fn new(arr: &[u8]) -> Option<Self> {
-        let mut data = [0 as u8; 4];
+        let mut data = [0; 4];
         data[..arr.len()].copy_from_slice(&arr);
         Some(Self {
             len: arr.len() as u8,
