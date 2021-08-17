@@ -27,4 +27,4 @@ jobs:
       uses: actions-rs/tarpaulin@v0.1.0
       with:
         # Extra command line arguments passed to cargo-tarpaulin
-        args: '-- -v --coveralls ${{secrets.COVERALLS_REPO_TOKEN}}'
+        args: '-v --coveralls ${{secrets.COVERALLS_REPO_TOKEN}}'
