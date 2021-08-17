@@ -1,0 +1,18 @@
+name: coverage
+on: [push]
+
+jobs:
+  test:
+    name: coverage
+    runs-on: ubuntu-latest
+    container:
+      image: xd009642/tarpaulin:develop-nightly
+      options: --security-opt seccomp=unconfined
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Generate code coverage
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          cargo +nightly tarpaulin --verbose --all-features --coveralls $COVERALLS_TOKEN --out Lcov
