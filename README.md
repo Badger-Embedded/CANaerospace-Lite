@@ -3,7 +3,7 @@
 [![crates.io](https://img.shields.io/crates/v/can_aerospace_lite.svg)](https://crates.io/crates/can_aerospace_lite)
 [![docs.rs](https://docs.rs/can_aerospace_lite/badge.svg)](https://docs.rs/can_aerospace_lite/)
 [![Build](https://github.com/Badger-Embedded/CANaerospace-Lite/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Badger-Embedded/CANaerospace-Lite/actions/workflows/build.yml)
-[![Coverage Status](https://coveralls.io/repos/github/Badger-Embedded/CANaerospace-Lite/badge.svg?branch=main)](https://coveralls.io/github/Badger-Embedded/CANaerospace-Lite?branch=main)
+[![codecov](https://codecov.io/gh/Badger-Embedded/CANaerospace-Lite/branch/main/graph/badge.svg?token=8WWG4KENBE)](https://codecov.io/gh/Badger-Embedded/CANaerospace-Lite)
 
 This crate implements CANAerospace protocol for low power embedded devices.
 
