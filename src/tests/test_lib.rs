@@ -5,7 +5,7 @@ pub mod canaerospacelite {
         driver::CANAerospaceDriver,
         message::{CANAerospaceFrame, CANAerospaceMessage, Payload, RawMessage},
         types::{
-            DataType, HardwareRevision, IDSConfiguration, MessageType, ServiceCode,
+            DataType, HardwareRevision, IDSConfiguration, MessageType,
             ServiceCodeEnum, SoftwareRevision,
         },
         CANAerospaceLite, IDS_CONF_STANDARD, IDS_MSG_HEADER_STANDARD,

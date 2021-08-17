@@ -199,11 +199,7 @@ where
     /// }
     /// ```
     pub fn read_message(&mut self) -> Option<CANAerospaceMessage> {
-        if let Some(frame) = self.rx_queue.pop() {
-            Some(CANAerospaceMessage::from(frame))
-        } else {
-            None
-        }
+        self.rx_queue.pop().map(CANAerospaceMessage::from)
     }
 
     /// Notifies CANAerospace regarding the arrival of new CAN frame.
