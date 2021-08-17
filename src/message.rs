@@ -80,7 +80,7 @@ impl Ord for CANAerospaceFrame {
 
 impl PartialOrd for CANAerospaceFrame {
     fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
-        Some(self.message_type.id().cmp(&other.message_type.id()))
+        Some(self.cmp(&other))
     }
 }
 
