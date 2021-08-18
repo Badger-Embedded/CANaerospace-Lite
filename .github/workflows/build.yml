@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ main, dev, tarpaulin-feature ]
+    branches: [ main, dev ]
   pull_request:
     branches: [ main, dev ]
 
@@ -20,12 +20,12 @@ jobs:
     - name: Build
       run: cargo build --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test --verbose --all-features
     - name: Run cargo-tarpaulin
       uses: actions-rs/tarpaulin@v0.1
       with:
         version: '0.15.0'
-        args: '-v --all-features --ignore-tests -- --test-threads 1'
+        args: '-v --ignore-tests -- --test-threads 1'
     - name: Upload to codecov.io
       uses: codecov/codecov-action@v1.0.2
       with:
