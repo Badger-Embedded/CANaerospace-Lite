@@ -113,7 +113,7 @@ pub mod canaerospacelite {
             if let Some(frame) = &DRIVER_FRAME_HOLDER {
                 assert!(matches!(frame.message_type, MessageType::NOD(300)));
                 assert_eq!(frame.message.node_id, 10);
-                assert_eq!(frame.message.service_code, ServiceCodeEnum::UNKNOWN as u8);
+                assert_eq!(frame.message.service_code, ServiceCodeEnum::UNKNOWN.as_u8());
                 assert_eq!(frame.message.message_code, canas.nod_count);
 
                 let data = DataType::USHORT2(0xDEAD, 0xBEEF).to_be_bytes();
@@ -184,7 +184,7 @@ pub mod canaerospacelite {
                 message: RawMessage {
                     node_id: 15,
                     data_type: DataType::NODATA.type_id(),
-                    service_code: ServiceCodeEnum::IDS as u8,
+                    service_code: ServiceCodeEnum::IDS.as_u8(),
                     message_code: 0,
                     payload: Payload::from([]),
                 },
@@ -206,7 +206,7 @@ pub mod canaerospacelite {
                 message: RawMessage {
                     node_id: 10,
                     data_type: DataType::NODATA.type_id(),
-                    service_code: ServiceCodeEnum::IDS as u8,
+                    service_code: ServiceCodeEnum::IDS.as_u8(),
                     message_code: 0,
                     payload: Payload::from([]),
                 },
@@ -239,7 +239,7 @@ pub mod canaerospacelite {
                 message: RawMessage {
                     node_id: 10,
                     data_type: DataType::NODATA.type_id(),
-                    service_code: ServiceCodeEnum::NSS as u8,
+                    service_code: ServiceCodeEnum::NSS.as_u8(),
                     message_code: 0,
                     payload: Payload::from([]),
                 },

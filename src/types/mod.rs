@@ -28,63 +28,115 @@ pub struct IDSResponse {
     pub header: IDSHeaderConfiguration,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum ServiceCodeEnum {
     /// Identification Service (0x0)
-    IDS = 0x0,
+    IDS,
     /// Node Synchronisation Service (0x1)
-    NSS = 0x1,
+    NSS,
     /// Data Download Service (0x2)
-    DDS = 0x2,
+    DDS,
     /// Data Upload Service (0x3)
-    DUS = 0x3,
-    /// Simultation Control Service (0x4)
-    SCS = 0x4,
+    DUS,
+    /// Simulation Control Service (0x4)
+    SCS,
     /// Transmission Interval Service (0x5)
-    TIS = 0x5,
+    TIS,
     /// FLASH Programming Service (0x6)
-    FPS = 0x6,
+    FPS,
     /// State Transmission Service (0x7)
-    STS = 0x7,
+    STS,
     /// Filter Setting Service (0x8)
-    FSS = 0x8,
+    FSS,
     /// Test Control Service (0x9)
-    TCS = 0x9,
+    TCS,
     /// CAN Baudrate Setting Service (0xA)
-    BSS = 0xA,
+    BSS,
     /// NodeId Setting Service (0xB)
-    NIS = 0xB,
+    NIS,
     /// Module Information Service (0xC)
-    MIS = 0xC,
+    MIS,
     /// Module Configuration Service (0xD)
-    MCS = 0xD,
+    MCS,
     /// CAN ID Setting Service (0xE)
-    CSS = 0xE,
+    CSS,
     /// CAN ID Distribution Setting Service (0xF)
-    DSS = 0xF,
+    DSS,
+    /// User-Defined Service Code \[100, 254\]
+    CUSTOM(u8),
+    UNKNOWN,
+}
 
-    UNKNOWN = 0xFF,
+impl ServiceCodeEnum {
+    /// Converts [ServiceCodeEnum] to u8
+    ///
+    /// # use can_aerospace_lite::types::ServiceCodeEnum;
+    /// let mut custom_service = ServiceCodeEnum::CUSTOM(100);
+    /// assert_eq!(custom_service.as_u8(), 100);
+    /// custom_service = ServiceCodeEnum::UNKNOWN;
+    /// assert_eq!(custom_service.as_u8(), 0xFF);
+    /// custom_service = ServiceCodeEnum::IDS;
+    /// assert_eq!(custom_service.as_u8(), 0x0);
+    ///```
+    pub fn as_u8(&self) -> u8 {
+        u8::from(*self)
+    }
+}
+
+impl From<ServiceCodeEnum> for u8 {
+    /// Converts [ServiceCodeEnum] to u8
+    ///
+    ///```
+    /// # use can_aerospace_lite::types::ServiceCodeEnum;
+    /// let mut custom_service = ServiceCodeEnum::CUSTOM(100);
+    /// assert_eq!(u8::from(custom_service), 100);
+    /// custom_service = ServiceCodeEnum::UNKNOWN;
+    /// assert_eq!(u8::from(custom_service), 0xFF);
+    ///```
+    fn from(code: ServiceCodeEnum) -> Self {
+        match code {
+            ServiceCodeEnum::IDS => 0,
+            ServiceCodeEnum::NSS => 1,
+            ServiceCodeEnum::DDS => 2,
+            ServiceCodeEnum::DUS => 3,
+            ServiceCodeEnum::SCS => 4,
+            ServiceCodeEnum::TIS => 5,
+            ServiceCodeEnum::FPS => 6,
+            ServiceCodeEnum::STS => 7,
+            ServiceCodeEnum::FSS => 8,
+            ServiceCodeEnum::TCS => 9,
+            ServiceCodeEnum::BSS => 10,
+            ServiceCodeEnum::NIS => 11,
+            ServiceCodeEnum::MIS => 12,
+            ServiceCodeEnum::MCS => 13,
+            ServiceCodeEnum::CSS => 14,
+            ServiceCodeEnum::DSS => 15,
+            ServiceCodeEnum::UNKNOWN => 0xFF,
+            ServiceCodeEnum::CUSTOM(id) => id,
+        }
+    }
 }
 
 impl From<u8> for ServiceCodeEnum {
     fn from(code: u8) -> Self {
         match code {
-            code if code == ServiceCodeEnum::IDS as u8 => ServiceCodeEnum::IDS,
-            code if code == ServiceCodeEnum::NSS as u8 => ServiceCodeEnum::NSS,
-            code if code == ServiceCodeEnum::DDS as u8 => ServiceCodeEnum::DDS,
-            code if code == ServiceCodeEnum::DUS as u8 => ServiceCodeEnum::DUS,
-            code if code == ServiceCodeEnum::SCS as u8 => ServiceCodeEnum::SCS,
-            code if code == ServiceCodeEnum::TIS as u8 => ServiceCodeEnum::TIS,
-            code if code == ServiceCodeEnum::FPS as u8 => ServiceCodeEnum::FPS,
-            code if code == ServiceCodeEnum::STS as u8 => ServiceCodeEnum::STS,
-            code if code == ServiceCodeEnum::FSS as u8 => ServiceCodeEnum::FSS,
-            code if code == ServiceCodeEnum::TCS as u8 => ServiceCodeEnum::TCS,
-            code if code == ServiceCodeEnum::BSS as u8 => ServiceCodeEnum::BSS,
-            code if code == ServiceCodeEnum::NIS as u8 => ServiceCodeEnum::NIS,
-            code if code == ServiceCodeEnum::MIS as u8 => ServiceCodeEnum::MIS,
-            code if code == ServiceCodeEnum::MCS as u8 => ServiceCodeEnum::MCS,
-            code if code == ServiceCodeEnum::CSS as u8 => ServiceCodeEnum::CSS,
-            code if code == ServiceCodeEnum::DSS as u8 => ServiceCodeEnum::DSS,
+            code if code == ServiceCodeEnum::IDS.as_u8() => ServiceCodeEnum::IDS,
+            code if code == ServiceCodeEnum::NSS.as_u8() => ServiceCodeEnum::NSS,
+            code if code == ServiceCodeEnum::DDS.as_u8() => ServiceCodeEnum::DDS,
+            code if code == ServiceCodeEnum::DUS.as_u8() => ServiceCodeEnum::DUS,
+            code if code == ServiceCodeEnum::SCS.as_u8() => ServiceCodeEnum::SCS,
+            code if code == ServiceCodeEnum::TIS.as_u8() => ServiceCodeEnum::TIS,
+            code if code == ServiceCodeEnum::FPS.as_u8() => ServiceCodeEnum::FPS,
+            code if code == ServiceCodeEnum::STS.as_u8() => ServiceCodeEnum::STS,
+            code if code == ServiceCodeEnum::FSS.as_u8() => ServiceCodeEnum::FSS,
+            code if code == ServiceCodeEnum::TCS.as_u8() => ServiceCodeEnum::TCS,
+            code if code == ServiceCodeEnum::BSS.as_u8() => ServiceCodeEnum::BSS,
+            code if code == ServiceCodeEnum::NIS.as_u8() => ServiceCodeEnum::NIS,
+            code if code == ServiceCodeEnum::MIS.as_u8() => ServiceCodeEnum::MIS,
+            code if code == ServiceCodeEnum::MCS.as_u8() => ServiceCodeEnum::MCS,
+            code if code == ServiceCodeEnum::CSS.as_u8() => ServiceCodeEnum::CSS,
+            code if code == ServiceCodeEnum::DSS.as_u8() => ServiceCodeEnum::DSS,
+            code if (100..=254).contains(&code) => ServiceCodeEnum::CUSTOM(code),
             _ => ServiceCodeEnum::UNKNOWN,
         }
     }

@@ -99,7 +99,7 @@ impl From<CANAerospaceMessage> for CANAerospaceFrame {
             message: RawMessage {
                 node_id: message.node_id,
                 data_type: message.data.type_id(),
-                service_code: message.service_code as u8,
+                service_code: message.service_code.as_u8(),
                 message_code: message.message_code,
                 payload: Payload::from(message.data.to_be_bytes()),
             },

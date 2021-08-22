@@ -11,7 +11,7 @@ mod canaerospacemessage {
             CANAerospaceMessage::new(MessageType::EED(100), 0xD, 0xFF, 0xA, DataType::FLOAT(2.5));
         assert_eq!(message.message_type, MessageType::EED(100));
         assert_eq!(message.node_id, 0xD);
-        assert_eq!(message.service_code as u8, 0xFF);
+        assert_eq!(message.service_code.as_u8(), 0xFF);
         assert_eq!(message.message_code, 0xA);
         assert_eq!(message.data, DataType::FLOAT(2.5));
         assert_eq!(message.data.to_be_bytes(), 2.5f32.to_be_bytes());
@@ -36,7 +36,7 @@ mod canaerospacemessage {
             DataType::ACHAR4(0, 0, 0, 0).type_id()
         );
         assert_eq!(message.data, DataType::ACHAR4(0x1, 0x2, 0x3, 0x4));
-        assert_eq!(message.service_code, ServiceCodeEnum::UNKNOWN);
+        assert_eq!(message.service_code, ServiceCodeEnum::CUSTOM(0xAA));
         assert_eq!(message.message_code, 0xCC);
     }
 }
@@ -125,7 +125,7 @@ mod canaerospaceframe {
 
         assert_eq!(frame.message_type, MessageType::NOD(305));
         assert_eq!(frame.message.node_id, 0xAC);
-        assert_eq!(frame.message.service_code, ServiceCodeEnum::UNKNOWN as u8);
+        assert_eq!(frame.message.service_code, ServiceCodeEnum::UNKNOWN.as_u8());
         assert_eq!(frame.message.message_code, 0x1);
         assert_eq!(
             frame.message.payload.data,
