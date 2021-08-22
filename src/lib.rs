@@ -22,6 +22,7 @@ pub mod message;
 mod tests;
 pub mod types;
 
+#[cfg(not(tarpaulin_include))]
 #[cfg(feature = "bxcan-support")]
 // #[cfg(any(feature = "bxcan-support", doc))]
 // #[doc(cfg(feature = "bxcan-support"))]
