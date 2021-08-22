@@ -150,6 +150,33 @@ impl RawMessage {
     }
 }
 
+impl From<RawMessage> for [u8; 8] {
+    /// Converts [RawMessage] into an byte array with length of 8
+    ///
+    ///```
+    /// use can_aerospace_lit::message::RawMessage;
+    /// let raw = RawMessage::new(&[0,1,2,3,3,5,4,7]);
+    /// let in_bytes = raw.into();
+    /// assert_eq!(in_bytes[0], 0);
+    /// assert_eq!(in_bytes[1], 1);
+    /// assert_eq!(in_bytes[2], 2);
+    /// assert_eq!(in_bytes[3], 3);
+    /// assert_eq!(in_bytes[4], 3);
+    /// assert_eq!(in_bytes[5], 5);
+    /// assert_eq!(in_bytes[6], 4);
+    /// assert_eq!(in_bytes[7], 7);
+    ///```
+    fn from(raw: RawMessage) -> Self {
+        let mut data = [0_u8; 8];
+        data[0] = raw.node_id;
+        data[1] = raw.data_type;
+        data[2] = raw.service_code;
+        data[3] = raw.message_code;
+        data[4..].copy_from_slice(&raw.payload.data);
+        data
+    }
+}
+
 macro_rules! raw_message_from_array {
     ( $($len:literal),+ ) => {
         $(
