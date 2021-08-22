@@ -154,9 +154,9 @@ impl From<RawMessage> for [u8; 8] {
     /// Converts [RawMessage] into an byte array with length of 8
     ///
     ///```
-    /// use can_aerospace_lit::message::RawMessage;
-    /// let raw = RawMessage::new(&[0,1,2,3,3,5,4,7]);
-    /// let in_bytes = raw.into();
+    /// # use can_aerospace_lite::message::RawMessage;
+    /// let raw = RawMessage::new(&[0,1,2,3,3,5,4,7]).unwrap();
+    /// let in_bytes: [u8; 8] = raw.into();
     /// assert_eq!(in_bytes[0], 0);
     /// assert_eq!(in_bytes[1], 1);
     /// assert_eq!(in_bytes[2], 2);
