@@ -76,7 +76,8 @@ fn main() {
     ));
     let instant = Instant::now();
     let mut delta = Duration::ZERO;
-    // Use `cangen vcan0 -g 1000 -L 8` to generate can messages
+    // Use `cangen vcan0 -g 1000 -I 80 -L 8 -D 0A000000DEADBEEF` to generate can messages
+    // This is a basic IDS request
     loop {
         if delta >= Duration::from_secs(10) {
             break;
