@@ -28,9 +28,13 @@ cortex-m = "0.7.3"
 cortex-m-rt = "0.6.15"
 # Panic behaviour, see https://crates.io/keywords/panic-impl for alternatives
 panic-halt = "0.2.0"
+socketcan = "1.7.0"
 
 [features]
 bxcan-support = ["bxcan"]
 
 [[example]]
 name = "hello"
+
+[[example]]
+name = "linux"
