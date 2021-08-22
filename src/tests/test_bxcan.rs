@@ -15,7 +15,7 @@ mod frame {
             [
                 0xA,
                 DataType::ERROR(0).type_id(),
-                ServiceCodeEnum::UNKNOWN as u8,
+                ServiceCodeEnum::UNKNOWN.as_u8(),
                 0x20,
                 0xDE,
                 0xAD,
@@ -27,7 +27,7 @@ mod frame {
         assert!(matches!(f.message_type, MessageType::NSH(128)));
         assert_eq!(f.message.node_id, 0xA);
         assert_eq!(f.message.data_type, DataType::ERROR(0).type_id());
-        assert_eq!(f.message.service_code, ServiceCodeEnum::UNKNOWN as u8);
+        assert_eq!(f.message.service_code, ServiceCodeEnum::UNKNOWN.as_u8());
         assert_eq!(f.message.message_code, 0x20);
         assert_eq!(
             f.message.payload.data,
@@ -68,14 +68,14 @@ mod data {
         let data = Data::from(&RawMessage {
             node_id: 0xBB,
             data_type: DataType::ERROR(0xDEADDEAD).type_id(),
-            service_code: ServiceCodeEnum::NSS as u8,
+            service_code: ServiceCodeEnum::NSS.as_u8(),
             message_code: 0xFD,
             payload: Payload::from(DataType::ERROR(0xDEADDEAD).to_be_bytes()),
         });
         let p = DataType::ERROR(0xDEADDEAD).to_be_bytes();
         assert_eq!(data[0], 0xBB);
         assert_eq!(data[1], DataType::ERROR(0xDEADDEAD).type_id());
-        assert_eq!(data[2], ServiceCodeEnum::NSS as u8);
+        assert_eq!(data[2], ServiceCodeEnum::NSS.as_u8());
         assert_eq!(data[3], 0xFD);
         assert_eq!(data[4], p[0]);
         assert_eq!(data[5], p[1]);
