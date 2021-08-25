@@ -1,7 +1,7 @@
 pub mod standard {
     use crate::{
         message::CANAerospaceMessage,
-        types::{DataType, MessageType},
+        types::{DataType, MessageType, ServiceCodeEnum},
     };
 
     pub struct EngineStatusBLONG<const N: usize, const S: usize>;
@@ -282,5 +282,53 @@ pub mod standard {
     fn dc_system_current_id(num: u8) -> u16 {
         let n = (num - 1) as u16;
         0x3A2 + n
+    }
+
+    pub struct GPSAircraftLatitude;
+    impl GPSAircraftLatitude {
+        /// Creates new GPS aircraft latitude message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::GPSAircraftLatitude;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let lat_h = GPSAircraftLatitude::new(DataType::DOUBLEH(51));
+        /// let lat_l = GPSAircraftLatitude::new(DataType::DOUBLEL(4401459));
+        /// assert_eq!(lat_h.message_type.id(), 0x40C);
+        /// assert_eq!(lat_l.message_type.id(), 0x40C);
+        /// assert_eq!(lat_h.data, DataType::DOUBLEH(51));
+        /// assert_eq!(lat_l.data, DataType::DOUBLEL(4401459));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x40C),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct GPSAircraftLongitude;
+    impl GPSAircraftLongitude {
+        /// Creates new GPS aircraft longitude message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::GPSAircraftLongitude;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let lon_h = GPSAircraftLongitude::new(DataType::DOUBLEH(5));
+        /// let lon_l = GPSAircraftLongitude::new(DataType::DOUBLEL(4707237));
+        /// assert_eq!(lon_h.message_type.id(), 0x40D);
+        /// assert_eq!(lon_l.message_type.id(), 0x40D);
+        /// assert_eq!(lon_h.data, DataType::DOUBLEH(5));
+        /// assert_eq!(lon_l.data, DataType::DOUBLEL(4707237));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x40D),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
     }
 }
