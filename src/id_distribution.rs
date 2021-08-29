@@ -4,6 +4,430 @@ pub mod standard {
         types::{DataType, MessageType, ServiceCodeEnum},
     };
 
+    pub struct BodyLongitudinalAcceleration;
+    impl BodyLongitudinalAcceleration {
+        /// Creates new body longitudinal acceleration message.
+        /// Units: g
+        /// Notes:
+        ///     forward: +
+        ///     aft: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyLongitudinalAcceleration;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let accl = BodyLongitudinalAcceleration::new(DataType::FLOAT(1.5));
+        /// assert_eq!(accl.message_type.id(), 0x12C);
+        /// assert_eq!(accl.data, DataType::FLOAT(1.5));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x12C),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct BodyLateralAcceleration;
+    impl BodyLateralAcceleration {
+        /// Creates new body lateral acceleration message.
+        /// Units: g
+        /// Notes:
+        ///     right: +
+        ///     left: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyLateralAcceleration;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let accl = BodyLateralAcceleration::create(DataType::FLOAT(0.1));
+        /// assert_eq!(accl.message_type.id(), 0x12D);
+        /// assert_eq!(accl.data, DataType::FLOAT(0.1));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x12D),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyNormalAcceleration;
+    impl BodyNormalAcceleration {
+        /// Creates new body normal acceleration message.
+        /// Units: g
+        /// Notes:
+        ///     up: +
+        ///     down: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyNormalAcceleration;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let accl = BodyNormalAcceleration::create(DataType::FLOAT(0.5));
+        /// assert_eq!(accl.message_type.id(), 0x12E);
+        /// assert_eq!(accl.data, DataType::FLOAT(0.5));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x12E),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyPitchRate;
+    impl BodyPitchRate {
+        /// Creates new body pitch rate message.
+        /// Units: deg/s
+        /// Notes:
+        ///     nose up: +
+        ///     nose down: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyPitchRate;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let pitch = BodyPitchRate::create(DataType::FLOAT(1.0));
+        /// assert_eq!(pitch.message_type.id(), 0x12F);
+        /// assert_eq!(pitch.data, DataType::FLOAT(1.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x12F),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyRollRate;
+    impl BodyRollRate {
+        /// Creates new body roll rate message.
+        /// Units: deg/s
+        /// Notes:
+        ///     roll right: +
+        ///     roll left: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyRollRate;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let roll = BodyRollRate::create(DataType::FLOAT(1.0));
+        /// assert_eq!(roll.message_type.id(), 0x130);
+        /// assert_eq!(roll.data, DataType::FLOAT(1.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x130),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyYawRate;
+    impl BodyYawRate {
+        /// Creates new body yaw rate message.
+        /// Units: deg/s
+        /// Notes:
+        ///     yaw right: +
+        ///     yaw left: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyYawRate;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let yaw = BodyYawRate::create(DataType::FLOAT(1.0));
+        /// assert_eq!(yaw.message_type.id(), 0x131);
+        /// assert_eq!(yaw.data, DataType::FLOAT(1.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x131),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyPitchAngle;
+    impl BodyPitchAngle {
+        /// Creates new body pitch angle message.
+        /// Units: deg
+        /// Notes:
+        ///     nose up: +
+        ///     nose down: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyPitchRate;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let pitch = BodyPitchRate::create(DataType::FLOAT(0.1));
+        /// assert_eq!(pitch.message_type.id(), 0x137);
+        /// assert_eq!(pitch.data, DataType::FLOAT(0.1));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x137),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyRollAngle;
+    impl BodyRollAngle {
+        /// Creates new body roll angle message.
+        /// Units: deg
+        /// Notes:
+        ///     roll right: +
+        ///     roll left: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyRollAngle;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let roll = BodyRollAngle::create(DataType::FLOAT(1.0));
+        /// assert_eq!(roll.message_type.id(), 0x138);
+        /// assert_eq!(roll.data, DataType::FLOAT(1.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x138),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodySideSlip;
+    impl BodySideSlip {
+        /// Creates new body side slip message.
+        /// Units: deg
+        /// Notes:
+        ///     yaw right: +
+        ///     yaw left: -
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyYawAngle;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let yaw = BodyYawAngle::create(DataType::FLOAT(0.2));
+        /// assert_eq!(yaw.message_type.id(), 0x139);
+        /// assert_eq!(yaw.data, DataType::FLOAT(0.2));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x139),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct AltitudeRate;
+    impl AltitudeRate {
+        /// Creates new altitude rate message.
+        /// Units: m/s
+        ///```
+        /// # use can_aerospace_lite::ids::standard::AltitudeRate;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let alt = AltitudeRate::create(DataType::FLOAT(10.2));
+        /// assert_eq!(alt.message_type.id(), 0x13A);
+        /// assert_eq!(alt.data, DataType::FLOAT(10.2));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x13A),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BaroCorrectedAltitude;
+    impl BaroCorrectedAltitude {
+        /// Creates new baro corrected altitude message.
+        /// Units: m
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BaroCorrectedAltitude;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let alt = BaroCorrectedAltitude::create(DataType::FLOAT(50.0));
+        /// assert_eq!(alt.message_type.id(), 0x140);
+        /// assert_eq!(alt.data, DataType::FLOAT(50.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x140),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct HeadingAngle;
+    impl HeadingAngle {
+        /// Creates new heading angle message.
+        /// Units: deg
+        /// Notes: +/- 180(deg)
+        ///```
+        /// # use can_aerospace_lite::ids::standard::HeadingAngle;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let heading = HeadingAngle::create(DataType::FLOAT(50.0));
+        /// assert_eq!(heading.message_type.id(), 0x141);
+        /// assert_eq!(heading.data, DataType::FLOAT(50.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x141),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct StandardAltitude;
+    impl StandardAltitude {
+        /// Creates new standard altitude message.
+        /// Units: m
+        ///```
+        /// # use can_aerospace_lite::ids::standard::StandardAltitude;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let alt = StandardAltitude::create(DataType::FLOAT(50.0));
+        /// assert_eq!(alt.message_type.id(), 0x142);
+        /// assert_eq!(alt.data, DataType::FLOAT(50.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x142),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct HeadingRate;
+    impl HeadingRate {
+        /// Creates new heading rate message.
+        /// Units: deg/s
+        ///```
+        /// # use can_aerospace_lite::ids::standard::HeadingRate;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let heading = HeadingRate::create(DataType::FLOAT(5.0));
+        /// assert_eq!(heading.message_type.id(), 0x147);
+        /// assert_eq!(heading.data, DataType::FLOAT(5.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x147),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct TrueAltitude;
+    impl TrueAltitude {
+        /// Creates new true altitude message.
+        /// Units: m
+        ///```
+        /// # use can_aerospace_lite::ids::standard::TrueAltitude;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let heading = TrueAltitude::create(DataType::FLOAT(5.0));
+        /// assert_eq!(heading.message_type.id(), 0x14C);
+        /// assert_eq!(heading.data, DataType::FLOAT(5.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x14C),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyNormalVelocity;
+    impl BodyNormalVelocity {
+        /// Creates new body normal velocity message.
+        /// Units: m/s
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyNormalVelocity;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let vel = BodyNormalVelocity::create(DataType::FLOAT(15.0));
+        /// assert_eq!(vel.message_type.id(), 0x150);
+        /// assert_eq!(vel.data, DataType::FLOAT(15.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x150),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyLongitudinalVelocity;
+    impl BodyLongitudinalVelocity {
+        /// Creates new body longitudinal velocity message.
+        /// Units: m/s
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyLongitudinalVelocity;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let vel = BodyLongitudinalVelocity::create(DataType::FLOAT(15.0));
+        /// assert_eq!(vel.message_type.id(), 0x151);
+        /// assert_eq!(vel.data, DataType::FLOAT(15.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x151),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
+    pub struct BodyLateralVelocity;
+    impl BodyLateralVelocity {
+        /// Creates new body lateral velocity message.
+        /// Units: m/s
+        ///```
+        /// # use can_aerospace_lite::ids::standard::BodyLateralVelocity;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let vel = BodyLateralVelocity::create(DataType::FLOAT(15.0));
+        /// assert_eq!(vel.message_type.id(), 0x152);
+        /// assert_eq!(vel.data, DataType::FLOAT(15.0));
+        ///```
+        pub fn create(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x152),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+
     pub struct EngineStatusBLONG<const N: usize, const S: usize>;
     impl<const N: usize, const S: usize> EngineStatusBLONG<N, S> {
         /// Creates new engine status message. If given N or S values are not defined in standard then function panics.
