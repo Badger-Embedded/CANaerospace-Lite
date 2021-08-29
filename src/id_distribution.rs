@@ -1,3 +1,7 @@
+//! # CANAeropsace - ids
+//!
+//! Module contains standard messages defined by the CANaerospace standard.
+
 pub mod standard {
     use crate::{
         message::CANAerospaceMessage,
