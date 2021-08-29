@@ -69,7 +69,7 @@ pub enum ServiceCodeEnum {
 
 impl ServiceCodeEnum {
     /// Converts [ServiceCodeEnum] to u8
-    ///
+    ///```
     /// # use can_aerospace_lite::types::ServiceCodeEnum;
     /// let mut custom_service = ServiceCodeEnum::CUSTOM(100);
     /// assert_eq!(custom_service.as_u8(), 100);
