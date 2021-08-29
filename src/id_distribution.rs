@@ -331,4 +331,219 @@ pub mod standard {
             }
         }
     }
+
+    pub struct GPSAircraftHeightAboveEllips;
+    impl GPSAircraftHeightAboveEllips {
+        /// Creates new GPS aircraft height above ellipsis message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::GPSAircraftHeightAboveEllips;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = GPSAircraftHeightAboveEllips::new(DataType::FLOAT(5.5));
+        /// assert_eq!(height.message_type.id(), 0x40E);
+        /// assert_eq!(height.data, DataType::FLOAT(5.5));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x40E),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct GPSGroundSpeed;
+    impl GPSGroundSpeed {
+        /// Creates new GPS aircraft ground speed message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::GPSGroundSpeed;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = GPSGroundSpeed::new(DataType::FLOAT(5.5));
+        /// assert_eq!(height.message_type.id(), 0x40F);
+        /// assert_eq!(height.data, DataType::FLOAT(5.5));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x40F),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct INSAircraftLatitude;
+    impl INSAircraftLatitude {
+        /// Creates new INS aircraft latitude message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::INSAircraftLatitude;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let lat_h = INSAircraftLatitude::new(DataType::DOUBLEH(51));
+        /// let lat_l = INSAircraftLatitude::new(DataType::DOUBLEL(4401459));
+        /// assert_eq!(lat_h.message_type.id(), 0x419);
+        /// assert_eq!(lat_l.message_type.id(), 0x419);
+        /// assert_eq!(lat_h.data, DataType::DOUBLEH(51));
+        /// assert_eq!(lat_l.data, DataType::DOUBLEL(4401459));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x419),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct INSAircraftLongitude;
+    impl INSAircraftLongitude {
+        /// Creates new INS aircraft longitude message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::INSAircraftLongitude;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let lon_h = INSAircraftLongitude::new(DataType::DOUBLEH(5));
+        /// let lon_l = INSAircraftLongitude::new(DataType::DOUBLEL(4707237));
+        /// assert_eq!(lon_h.message_type.id(), 0x41A);
+        /// assert_eq!(lon_l.message_type.id(), 0x41A);
+        /// assert_eq!(lon_h.data, DataType::DOUBLEH(5));
+        /// assert_eq!(lon_l.data, DataType::DOUBLEL(4707237));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x41A),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct INSAircraftHeightAboveEllips;
+    impl INSAircraftHeightAboveEllips {
+        /// Creates new INS aircraft height above ellipsis message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::INSAircraftHeightAboveEllips;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = INSAircraftHeightAboveEllips::new(DataType::FLOAT(5.5));
+        /// assert_eq!(height.message_type.id(), 0x41B);
+        /// assert_eq!(height.data, DataType::FLOAT(5.5));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x41B),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct INSGroundSpeed;
+    impl INSGroundSpeed {
+        /// Creates new INS aircraft ground speed message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::INSGroundSpeed;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = INSGroundSpeed::new(DataType::FLOAT(5.5));
+        /// assert_eq!(height.message_type.id(), 0x41C);
+        /// assert_eq!(height.data, DataType::FLOAT(5.5));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x41C),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct MagneticHeading;
+    impl MagneticHeading {
+        /// Creates new magnetic heading message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::MagneticHeading;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = MagneticHeading::new(DataType::FLOAT(105.5));
+        /// assert_eq!(height.message_type.id(), 0x42D);
+        /// assert_eq!(height.data, DataType::FLOAT(105.5));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x42D),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct DecisionHeight;
+    impl DecisionHeight {
+        /// Creates new decision height message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::DecisionHeight;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = DecisionHeight::new(DataType::FLOAT(500.0));
+        /// assert_eq!(height.message_type.id(), 0x44A);
+        /// assert_eq!(height.data, DataType::FLOAT(500.0));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x44A),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data: data,
+            }
+        }
+    }
+
+    pub struct MiscUTC;
+    impl MiscUTC {
+        /// Creates new miscellaneous UTC message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::MiscUTC;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = MiscUTC::new(DataType::CHAR4(13, 43, 22, 00));
+        /// assert_eq!(height.message_type.id(), 0x4B0);
+        /// assert_eq!(height.data, DataType::CHAR4(13, 43, 22, 00));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x4B0),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
+    pub struct MiscDate;
+    impl MiscDate {
+        /// Creates new miscellaneous date message.
+        ///```
+        /// # use can_aerospace_lite::ids::standard::MiscDate;
+        /// # use can_aerospace_lite::types::DataType;
+        /// let height = MiscDate::new(DataType::CHAR4(10, 08, 19, 96));
+        /// assert_eq!(height.message_type.id(), 0x4B6);
+        /// assert_eq!(height.data, DataType::CHAR4(10, 08, 19, 96));
+        ///```
+        pub fn new(data: DataType) -> CANAerospaceMessage {
+            CANAerospaceMessage {
+                message_type: MessageType::NOD(0x4B6),
+                node_id: 0x0,
+                service_code: ServiceCodeEnum::UNKNOWN,
+                message_code: 0x0,
+                data,
+            }
+        }
+    }
 }

@@ -18,8 +18,8 @@ use crate::types::{
 use crate::{driver::CANAerospaceDriver, types::MessageType};
 
 pub mod driver;
-#[cfg(not(tarpaulin_include))]
-#[cfg(feature = "ids-standard")]
+// #[cfg(not(tarpaulin_include))]
+// #[cfg(feature = "ids-standard")]
 pub mod id_distribution;
 pub mod message;
 mod tests;
@@ -31,8 +31,8 @@ pub mod types;
 // #[doc(cfg(feature = "bxcan-support"))]
 pub mod bxcan;
 
-#[cfg(not(tarpaulin_include))]
-#[cfg(feature = "ids-standard")]
+// #[cfg(not(tarpaulin_include))]
+// #[cfg(feature = "ids-standard")]
 pub use id_distribution as ids;
 
 pub const IDS_CONF_STANDARD: IDSConfiguration = IDSConfiguration(0);
