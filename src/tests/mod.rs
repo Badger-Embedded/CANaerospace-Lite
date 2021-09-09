@@ -6,3 +6,4 @@
 mod test_bxcan;
 mod test_lib;
 mod test_message;
+mod test_types;
